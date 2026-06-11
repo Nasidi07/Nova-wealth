@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — Platform Overview</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0AB68B;
+  --teal-dark: #078C6C;
+  --teal-light: #E6F7F2;
+  --navy: #0B1F3A;
+  --navy-mid: #1A3354;
+  --slate: #4A6080;
+  --mist: #F0F4F8;
+  --white: #FFFFFF;
+  --border: #DDE4ED;
+  --ink: #0B1F3A;
+  --ink-mid: #4A6080;
+  --ink-faint: #94A3B8;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r-sm: 6px;
+  --r: 12px;
+  --r-lg: 20px;
+  --sh-sm: 0 1px 4px rgba(11,31,58,.07);
+  --sh: 0 4px 20px rgba(11,31,58,.10);
+  --sh-lg: 0 12px 40px rgba(11,31,58,.15);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: var(--navy); color: #fff; min-height: 100vh; }
+a { text-decoration: none; color: inherit; }
+
+.top-bar {
+  background: #060F1C;
+  padding: 18px 48px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #1E2D42;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.top-bar .logo { font-family: var(--serif); font-size: 24px; color: var(--teal); }
+.top-bar .logo span { color: #fff; }
+.top-bar .sep { color: #4A6080; margin: 0 4px; }
+.top-bar .file { font-family: var(--mono); font-size: 11px; color: #4A6080; }
+.top-bar .badge { margin-left: auto; font-family: var(--mono); font-size: 10px; color: #4A6080; background: #1A2A3E; padding: 5px 12px; border-radius: 20px; }
+
+.hero {
+  padding: 64px 48px 48px;
+  max-width: 720px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: 48px;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+.hero h1 em { color: var(--teal); font-style: italic; }
+.hero p { font-size: 16px; color: #7A95B0; line-height: 1.6; margin-bottom: 28px; max-width: 520px; }
+.hero-stats { display: flex; gap: 40px; }
+.hero-stats .stat .val { font-family: var(--serif); font-size: 28px; color: var(--teal); }
+.hero-stats .stat .lbl { font-size: 11px; color: #4A6080; margin-top: 2px; }
+
+.section-label {
+  padding: 24px 48px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #4A6080;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-label::after { content: ''; flex: 1; height: 1px; background: #1E2D42; }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 0 48px 40px;
+}
+
+.card {
+  background: #0D1F35;
+  border: 1px solid #1E2D42;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+.card:hover {
+  border-color: var(--teal);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(10,182,139,.12);
+}
+.card-preview {
+  height: 180px;
+  background: var(--mist);
+  overflow: hidden;
+  position: relative;
+}
+.card-preview img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.card-preview .placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  background: linear-gradient(135deg, #0D1F35 0%, #1A3354 100%);
+}
+.card-body { padding: 18px 20px; flex: 1; display: flex; flex-direction: column; }
+.card-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--teal);
+  letter-spacing: .08em;
+  margin-bottom: 6px;
+}
+.card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.card-desc { font-size: 12px; color: #7A95B0; line-height: 1.5; flex: 1; }
+.card-tags { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+.tag {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: rgba(10,182,139,.1);
+  color: var(--teal);
+  letter-spacing: .04em;
+}
+.tag.navy { background: rgba(255,255,255,.06); color: #7A95B0; }
+
+.section-grid { grid-template-columns: 1fr; }
+.screen-row {
+  display: flex;
+  gap: 20px;
+  padding: 0 48px 24px;
+  flex-wrap: wrap;
+}
+.screen-row .card { min-width: 280px; flex: 1; max-width: 400px; }
+
+@media (max-width: 768px) {
+  .hero { padding: 40px 24px 32px; }
+  .hero h1 { font-size: 32px; }
+  .grid { grid-template-columns: 1fr; padding: 0 24px 32px; }
+  .screen-row { padding: 0 24px 16px; }
+  .section-label { padding: 20px 24px 10px; }
+  .top-bar { padding: 14px 24px; }
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="logo">Nova <span>Wealth</span></div>
+  <div class="sep">—</div>
+  <div class="file">Platform Overview</div>
+  <div class="badge">13 Screens · Desktop Web</div>
+</div>
+
+<div class="hero">
+  <h1>Smart investing, <em>automated.</em></h1>
+  <p>Nova Wealth builds and manages a personalised portfolio based on your goals, timeline, and risk tolerance — then rebalances automatically.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="val">$6.2B</div><div class="lbl">Assets under management</div></div>
+    <div class="stat"><div class="val">98K+</div><div class="lbl">Active investors</div></div>
+    <div class="stat"><div class="val">11.4%</div><div class="lbl">Avg. annual return</div></div>
+  </div>
+</div>
+
+<div class="section-label">A · Public Website</div>
+<div class="screen-row" style="padding-left:48px;padding-right:48px">
+  <a href="screens/home.html" class="card" style="max-width:100%">
+    <div class="card-preview"><div class="placeholder">🏠</div></div>
+    <div class="card-body">
+      <div class="card-num">01</div>
+      <div class="card-title">Homepage</div>
+      <div class="card-desc">Public landing page with hero, features grid, and CTAs. First impression for new visitors.</div>
+      <div class="card-tags"><span class="tag">marketing</span><span class="tag navy">responsive</span></div>
+    </div>
+  </a>
+</div>
+
+<div class="section-label">B · Authentication & KYC</div>
+<div class="screen-row" style="padding-left:48px;padding-right:48px">
+  <a href="screens/auth.html" class="card" style="max-width:320px">
+    <div class="card-preview"><div class="placeholder">🔐</div></div>
+    <div class="card-body">
+      <div class="card-num">02–04</div>
+      <div class="card-title">Sign Up, MFA & KYC</div>
+      <div class="card-desc">Multi-step onboarding: account creation, MFA verification, and identity document upload.</div>
+      <div class="card-tags"><span class="tag">auth flow</span><span class="tag">3 steps</span></div>
+    </div>
+  </a>
+</div>
+
+<div class="section-label">C · User Portal</div>
+<div class="screen-row" style="padding-left:48px;padding-right:48px">
+  <a href="screens/dashboard.html" class="card">
+    <div class="card-preview"><div class="placeholder">📊</div></div>
+    <div class="card-body">
+      <div class="card-num">05</div>
+      <div class="card-title">Dashboard</div>
+      <div class="card-desc">Portfolio overview with KPIs, performance chart, and recent transactions.</div>
+      <div class="card-tags"><span class="tag">core</span><span class="tag navy">sidebar nav</span></div>
+    </div>
+  </a>
+  <a href="screens/portfolio.html" class="card">
+    <div class="card-preview"><div class="placeholder">📈</div></div>
+    <div class="card-body">
+      <div class="card-num">06</div>
+      <div class="card-title">Portfolio</div>
+      <div class="card-desc">Holdings breakdown, asset allocation pie chart, and risk gauge.</div>
+      <div class="card-tags"><span class="tag">data viz</span><span class="tag">table</span></div>
+    </div>
+  </a>
+  <a href="screens/goals.html" class="card">
+    <div class="card-preview"><div class="placeholder">🎯</div></div>
+    <div class="card-body">
+      <div class="card-num">07</div>
+      <div class="card-title">Goals</div>
+      <div class="card-desc">Financial goal tracking with progress bars and target dates.</div>
+      <div class="card-tags"><span class="tag">progress</span><span class="tag">cards</span></div>
+    </div>
+  </a>
+  <a href="screens/funding.html" class="card">
+    <div class="card-preview"><div class="placeholder">💳</div></div>
+    <div class="card-body">
+      <div class="card-num">08</div>
+      <div class="card-title">Funding & Transfers</div>
+      <div class="card-desc">Linked bank accounts, deposit form, and transfer destinations.</div>
+      <div class="card-tags"><span class="tag">form</span><span class="tag">payment</span></div>
+    </div>
+  </a>
+  <a href="screens/analytics.html" class="card">
+    <div class="card-preview"><div class="placeholder">📉</div></div>
+    <div class="card-body">
+      <div class="card-num">09</div>
+      <div class="card-title">Analytics</div>
+      <div class="card-desc">Performance charts, period comparisons, and exportable reports.</div>
+      <div class="card-tags"><span class="tag">charts</span><span class="tag">data</span></div>
+    </div>
+  </a>
+  <a href="screens/notifications.html" class="card">
+    <div class="card-preview"><div class="placeholder">🔔</div></div>
+    <div class="card-body">
+      <div class="card-num">10</div>
+      <div class="card-title">Notifications</div>
+      <div class="card-desc">Alert feed with read/unread states and mark-all-read.</div>
+      <div class="card-tags"><span class="tag">feed</span><span class="tag">interactive</span></div>
+    </div>
+  </a>
+  <a href="screens/statements.html" class="card">
+    <div class="card-preview"><div class="placeholder">📄</div></div>
+    <div class="card-body">
+      <div class="card-num">11</div>
+      <div class="card-title">Statements & Documents</div>
+      <div class="card-desc">Account statements, tax forms, and legal documents organized by year.</div>
+      <div class="card-tags"><span class="tag">documents</span><span class="tag">download</span></div>
+    </div>
+  </a>
+  <a href="screens/support.html" class="card">
+    <div class="card-preview"><div class="placeholder">💬</div></div>
+    <div class="card-body">
+      <div class="card-num">12</div>
+      <div class="card-title">Support Chat</div>
+      <div class="card-desc">Ticket list with live chat interface and agent status.</div>
+      <div class="card-tags"><span class="tag">chat</span><span class="tag">tickets</span></div>
+    </div>
+  </a>
+</div>
+
+<div class="section-label">D · Admin Portal</div>
+<div class="screen-row" style="padding-left:48px;padding-right:48px">
+  <a href="screens/admin.html" class="card" style="max-width:100%">
+    <div class="card-preview"><div class="placeholder">⚙</div></div>
+    <div class="card-body">
+      <div class="card-num">13</div>
+      <div class="card-title">Admin Console</div>
+      <div class="card-desc">Platform overview with user management, risk alerts, compliance queue, and AML flags.</div>
+      <div class="card-tags"><span class="tag">admin</span><span class="tag">table</span><span class="tag navy">alerts</span></div>
+    </div>
+  </a>
+</div>
+
+<div class="section-label">E · Mobile App</div>
+<div class="screen-row" style="padding-left:48px;padding-right:48px">
+  <a href="screens/mobile.html" class="card" style="max-width:320px">
+    <div class="card-preview"><div class="placeholder">📱</div></div>
+    <div class="card-body">
+      <div class="card-num">M1–M2</div>
+      <div class="card-title">Mobile Dashboard & Portfolio</div>
+      <div class="card-desc">Compact mobile views with bottom nav, hero card, and goal list.</div>
+      <div class="card-tags"><span class="tag">mobile</span><span class="tag">2 screens</span></div>
+    </div>
+  </a>
+</div>
+
+<div style="height:60px"></div>
+
+</body>
+</html>

@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — OpenDesign File</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   DESIGN TOKENS — Nova Wealth
+   ═══════════════════════════════════════ */
+:root {
+  /* Palette */
+  --teal:       #0AB68B;
+  --teal-dark:  #078C6C;
+  --teal-light: #E6F7F2;
+  --navy:       #0B1F3A;
+  --navy-mid:   #1A3354;
+  --slate:      #4A6080;
+  --mist:       #F0F4F8;
+  --white:      #FFFFFF;
+  --border:     #DDE4ED;
+  --amber:      #F59E0B;
+  --amber-bg:   #FEF3C7;
+  --red:        #EF4444;
+  --red-bg:     #FEE2E2;
+  --blue:       #3B82F6;
+  --blue-bg:    #EFF6FF;
+  --ink:        #0B1F3A;
+  --ink-mid:    #4A6080;
+  --ink-faint:  #94A3B8;
+
+  /* Type */
+  --serif:  'Instrument Serif', Georgia, serif;
+  --sans:   'Sora', system-ui, sans-serif;
+  --mono:   'JetBrains Mono', monospace;
+
+  /* Shape */
+  --r-sm:  6px;
+  --r:     12px;
+  --r-lg:  20px;
+
+  /* Shadow */
+  --sh-sm: 0 1px 4px rgba(11,31,58,.07);
+  --sh:    0 4px 20px rgba(11,31,58,.10);
+  --sh-lg: 0 12px 40px rgba(11,31,58,.15);
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); background: #101C2E; color: var(--ink); font-size: 14px; line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+
+/* ── CANVAS CHROME ── */
+.canvas-header {
+  background: #060F1C;
+  padding: 16px 40px;
+  display: flex; align-items: center; gap: 16px;
+  border-bottom: 1px solid #1E2D42;
+  position: sticky; top: 0; z-index: 100;
+}
+.canvas-logo { font-family: var(--serif); font-size: 20px; color: var(--teal); letter-spacing: -.01em; }
+.canvas-title { font-size: 12px; color: #4A6080; margin-left: 4px; }
+.canvas-badge { margin-left: auto; font-family: var(--mono); font-size: 10px; color: #4A6080; background: #1A2A3E; padding: 4px 10px; border-radius: 20px; }
+
+.section-divider {
+  padding: 28px 40px 12px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  color: #4A6080; border-top: 1px solid #1E2D42; margin-top: 8px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-divider::after { content: ''; flex: 1; height: 1px; background: #1E2D42; }
+
+.screens-row {
+  display: flex; gap: 28px; padding: 0 40px 40px;
+  flex-wrap: wrap;
+}
+.screens-row.nowrap { flex-wrap: nowrap; overflow-x: auto; }
+
+/* ── SCREEN SHELL ── */
+.screen {
+  background: var(--white);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 40px rgba(0,0,0,.4);
+  flex-shrink: 0;
+}
+.screen-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  color: #4A6080; margin-bottom: 8px;
+}
+.w-320  { width: 320px; }
+.w-420  { width: 420px; }
+.w-560  { width: 560px; }
+.w-720  { width: 720px; }
+.w-900  { width: 900px; }
+.w-full { width: 100%; }
+
+/* ══ SHARED ATOMS ══ */
+.btn { display: inline-flex; align-items: center; gap: 6px; border: none; cursor: pointer; font-family: var(--sans); font-weight: 600; border-radius: var(--r-sm); transition: opacity .15s; }
+.btn:hover { opacity: .88; }
+.btn-primary { background: var(--teal); color: #fff; padding: 11px 22px; font-size: 13px; }
+.btn-navy    { background: var(--navy); color: #fff; padding: 11px 22px; font-size: 13px; }
+.btn-ghost   { background: transparent; color: var(--ink-mid); border: 1.5px solid var(--border); padding: 10px 18px; font-size: 13px; }
+.btn-sm      { padding: 7px 14px; font-size: 12px; }
+.btn-lg      { padding: 14px 32px; font-size: 15px; }
+
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-teal   { background: var(--teal-light); color: var(--teal-dark); }
+.badge-amber  { background: var(--amber-bg); color: #B45309; }
+.badge-red    { background: var(--red-bg); color: #B91C1C; }
+.badge-blue   { background: var(--blue-bg); color: #1D4ED8; }
+.badge-navy   { background: #E8EDF4; color: var(--navy); }
+
+.input-wrap { margin-bottom: 14px; }
+.input-wrap label { display: block; font-size: 11px; font-weight: 600; color: var(--ink-mid); margin-bottom: 5px; letter-spacing: .03em; text-transform: uppercase; }
+.input-wrap input, .input-wrap select, .input-wrap textarea {
+  width: 100%; padding: 10px 13px; border: 1.5px solid var(--border);
+  border-radius: var(--r-sm); font-family: var(--sans); font-size: 13px; color: var(--ink);
+  background: var(--mist);
+}
+.input-wrap input:focus { outline: none; border-color: var(--teal); }
+.input-wrap .hint { font-size: 11px; color: var(--ink-faint); margin-top: 4px; }
+
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; box-shadow: var(--sh-sm); }
+.card-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-bottom: 6px; }
+.card-value { font-family: var(--serif); font-size: 28px; color: var(--ink); line-height: 1; }
+.card-sub   { font-size: 12px; color: var(--ink-mid); margin-top: 4px; }
+
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+.row  { display: flex; gap: 14px; }
+.col  { flex: 1; }
+.up   { color: var(--teal); }
+.down { color: var(--red); }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 210px; background: var(--navy); flex-shrink: 0;
+  display: flex; flex-direction: column; min-height: 580px;
+}
+.sidebar-brand { font-family: var(--serif); font-size: 20px; color: var(--teal); padding: 22px 20px 28px; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px; padding: 10px 20px;
+  font-size: 12px; font-weight: 500; color: #7A95B0;
+  border-left: 3px solid transparent; transition: all .15s;
+}
+.sidebar nav a.active { color: #fff; border-left-color: var(--teal); background: rgba(255,255,255,.06); }
+.sidebar nav .ico { font-size: 14px; width: 18px; text-align: center; }
+.sidebar-footer { margin-top: auto; padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.07); }
+.sidebar-user { display: flex; align-items: center; gap: 10px; }
+.sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.sidebar-user-info .name { font-size: 12px; font-weight: 600; color: #fff; }
+.sidebar-user-info .role { font-size: 10px; color: #4A6080; }
+
+/* ── TOPBAR ── */
+.topbar { background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 12px; }
+.topbar-brand { font-family: var(--serif); font-size: 20px; color: var(--navy); }
+.topbar-brand span { color: var(--teal); }
+.topbar-spacer { flex: 1; }
+.topbar-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--teal-dark); }
+
+/* ── PROGRESS BAR ── */
+.progress-track { background: var(--border); border-radius: 20px; height: 6px; overflow: hidden; }
+.progress-fill  { height: 100%; border-radius: 20px; background: var(--teal); }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { padding: 9px 12px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); border-bottom: 1.5px solid var(--border); }
+td { padding: 11px 12px; border-bottom: 1px solid var(--border); color: var(--ink-mid); }
+tr:last-child td { border-bottom: none; }
+td.strong { font-weight: 600; color: var(--ink); }
+tr:hover td { background: var(--mist); }
+
+/* ── CHART ATOMS ── */
+.bar-chart { display: flex; align-items: flex-end; gap: 5px; height: 90px; padding: 0 4px; background: var(--mist); border-radius: var(--r-sm); }
+.bar { flex: 1; border-radius: 4px 4px 0 0; background: var(--teal); opacity: .75; min-width: 8px; }
+.bar.hi { opacity: 1; }
+.line-chart-svg { width: 100%; height: 90px; }
+.pie { width: 90px; height: 90px; border-radius: 50%; background: conic-gradient(var(--teal) 0% 40%, var(--blue) 40% 62%, var(--amber) 62% 80%, #CBD5E0 80% 100%); flex-shrink: 0; }
+
+/* ── LEGEND ── */
+.legend { display: flex; flex-direction: column; gap: 7px; }
+.legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── STEP DOTS ── */
+.step-dots { display: flex; align-items: center; gap: 6px; margin-bottom: 24px; }
+.step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+.step-dot.done { background: var(--teal); }
+.step-dot.active { width: 22px; border-radius: 4px; background: var(--teal); }
+.step-line { flex: 1; height: 1px; background: var(--border); }
+
+/* ── NOTIFICATION DOT ── */
+.notif-dot { width: 7px; height: 7px; background: var(--red); border-radius: 50%; border: 1.5px solid #fff; position: absolute; top: -1px; right: -1px; }
+
+/* ── RISK GAUGE ── */
+.gauge-track { height: 8px; border-radius: 20px; background: linear-gradient(90deg, #0AB68B 0%, #F59E0B 50%, #EF4444 100%); margin: 10px 0; position: relative; }
+.gauge-pin { position: absolute; top: -5px; width: 18px; height: 18px; background: #fff; border: 2.5px solid var(--navy); border-radius: 50%; transform: translateX(-50%); }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 1 — PUBLIC HOMEPAGE
+   ════════════════════════════════════════════ */
+.home-nav { background: var(--white); padding: 16px 36px; display: flex; align-items: center; gap: 32px; border-bottom: 1px solid var(--border); }
+.home-nav .brand { font-family: var(--serif); font-size: 22px; color: var(--navy); }
+.home-nav .brand span { color: var(--teal); }
+.home-nav .links { display: flex; gap: 24px; font-size: 13px; color: var(--ink-mid); font-weight: 500; }
+.home-nav .ctas  { margin-left: auto; display: flex; gap: 8px; }
+.home-hero { background: var(--navy); padding: 52px 36px 44px; }
+.home-hero .eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); margin-bottom: 14px; }
+.home-hero h1 { font-family: var(--serif); font-size: 42px; color: #fff; line-height: 1.12; margin-bottom: 16px; max-width: 480px; }
+.home-hero h1 em { color: var(--teal); font-style: italic; }
+.home-hero p { font-size: 14px; color: #7A95B0; max-width: 400px; margin-bottom: 28px; line-height: 1.65; }
+.home-hero .cta-row { display: flex; gap: 10px; align-items: center; }
+.hero-stats { display: flex; gap: 32px; margin-top: 36px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.08); }
+.hero-stat .val { font-family: var(--serif); font-size: 26px; color: #fff; }
+.hero-stat .lbl { font-size: 11px; color: #4A6080; margin-top: 2px; }
+.home-features { display: grid; grid-template-columns: repeat(3,1fr); gap: 0; }
+.feature-cell { padding: 24px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.feature-cell:nth-child(3n) { border-right: none; }
+.feature-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 10px; }
+.feature-cell h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.feature-cell p  { font-size: 12px; color: var(--ink-mid); line-height: 1.55; }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 2 — SIGN UP / KYC
+   ════════════════════════════════════════════ */
+.auth-split { display: flex; min-height: 560px; }
+.auth-left { width: 44%; background: var(--navy); padding: 40px 36px; display: flex; flex-direction: column; justify-content: center; }
+.auth-left .brand { font-family: var(--serif); font-size: 22px; color: var(--teal); margin-bottom: 28px; }
+.auth-left h2 { font-family: var(--serif); font-size: 26px; color: #fff; margin-bottom: 12px; line-height: 1.2; }
+.auth-left p { font-size: 12px; color: #7A95B0; line-height: 1.6; }
+.auth-left .trust-items { margin-top: 28px; display: flex; flex-direction: column; gap: 8px; }
+.auth-left .trust-item { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #7A95B0; }
+.trust-check { color: var(--teal); font-weight: 700; }
+.auth-right { flex: 1; padding: 36px; display: flex; flex-direction: column; justify-content: center; }
+.auth-right h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.auth-right .sub { font-size: 12px; color: var(--ink-mid); margin-bottom: 22px; }
+.social-btn { width: 100%; padding: 10px; border: 1.5px solid var(--border); border-radius: var(--r-sm); background: var(--white); font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.or-divider { display: flex; align-items: center; gap: 10px; margin: 14px 0; font-size: 11px; color: var(--ink-faint); }
+.or-divider::before, .or-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.mfa-row { display: flex; gap: 6px; margin-bottom: 14px; }
+.mfa-box { flex: 1; height: 44px; border: 1.5px solid var(--border); border-radius: var(--r-sm); background: var(--mist); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+.mfa-box.filled { border-color: var(--teal); color: var(--ink); }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 3 — USER DASHBOARD
+   ════════════════════════════════════════════ */
+.dash-wrap { display: flex; }
+.dash-main { flex: 1; background: var(--mist); padding: 22px; min-height: 580px; }
+.dash-toprow { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+.dash-greeting h2 { font-size: 18px; font-weight: 600; }
+.dash-greeting p  { font-size: 12px; color: var(--ink-mid); }
+.kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 18px; }
+.perf-chart-wrap { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 16px; box-shadow: var(--sh-sm); }
+.perf-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.perf-title { font-size: 13px; font-weight: 600; }
+.tab-group { display: flex; gap: 4px; }
+.tab { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; color: var(--ink-mid); cursor: pointer; }
+.tab.active { background: var(--teal-light); color: var(--teal-dark); }
+.tx-list { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--sh-sm); overflow: hidden; }
+.tx-header { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.tx-row { display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-bottom: 1px solid var(--border); }
+.tx-row:last-child { border-bottom: none; }
+.tx-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.tx-info .tx-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.tx-info .tx-date { font-size: 11px; color: var(--ink-faint); }
+.tx-amount { font-family: var(--mono); font-size: 13px; font-weight: 500; margin-left: auto; }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 4 — PORTFOLIO
+   ════════════════════════════════════════════ */
+.port-main { flex: 1; background: var(--mist); padding: 22px; }
+.holdings-table { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--sh-sm); overflow: hidden; }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 5 — GOALS
+   ════════════════════════════════════════════ */
+.goals-main { flex: 1; background: var(--mist); padding: 22px; }
+.goal-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 10px; box-shadow: var(--sh-sm); }
+.goal-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+.goal-name { font-size: 14px; font-weight: 600; }
+.goal-meta { font-size: 11px; color: var(--ink-mid); margin-top: 2px; }
+.goal-amounts { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-faint); margin-top: 6px; }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 6 — FUNDING & TRANSFERS
+   ════════════════════════════════════════════ */
+.funding-main { flex: 1; background: var(--mist); padding: 22px; }
+.account-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; cursor: pointer; }
+.account-card.selected { border-color: var(--teal); background: var(--teal-light); }
+.account-bank { width: 36px; height: 36px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.account-info .bank-name { font-size: 13px; font-weight: 600; }
+.account-info .acct-num  { font-size: 11px; color: var(--ink-faint); }
+.account-bal { margin-left: auto; font-family: var(--mono); font-size: 13px; font-weight: 500; }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 7 — ANALYTICS
+   ════════════════════════════════════════════ */
+.analytics-main { flex: 1; background: var(--mist); padding: 22px; }
+.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 8 — NOTIFICATIONS
+   ════════════════════════════════════════════ */
+.notif-list { padding: 0; }
+.notif-item { display: flex; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.notif-item.unread { background: #F6FBF9; }
+.notif-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.notif-icon.teal  { background: var(--teal-light); }
+.notif-icon.amber { background: var(--amber-bg); }
+.notif-icon.red   { background: var(--red-bg); }
+.notif-body .notif-title { font-size: 13px; font-weight: 600; color: var(--ink); }
+.notif-body .notif-desc  { font-size: 12px; color: var(--ink-mid); margin-top: 2px; line-height: 1.45; }
+.notif-body .notif-time  { font-size: 10px; color: var(--ink-faint); margin-top: 4px; }
+.unread-pip { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); margin-top: 6px; flex-shrink: 0; }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 9 — STATEMENTS & DOCUMENTS
+   ════════════════════════════════════════════ */
+.doc-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.doc-row:last-child { border-bottom: none; }
+.doc-icon { width: 34px; height: 34px; background: var(--blue-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.doc-info .doc-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.doc-info .doc-meta { font-size: 11px; color: var(--ink-faint); }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 10 — KYC VERIFICATION
+   ════════════════════════════════════════════ */
+.kyc-wrap { padding: 36px; min-height: 520px; background: var(--mist); }
+.kyc-step-bar { display: flex; align-items: center; margin-bottom: 28px; }
+.kyc-step { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+.kyc-step-circle { width: 28px; height: 28px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: var(--ink-faint); }
+.kyc-step-circle.done   { background: var(--teal); color: #fff; }
+.kyc-step-circle.active { background: var(--navy); color: #fff; }
+.kyc-step-label { font-size: 9px; color: var(--ink-faint); text-transform: uppercase; letter-spacing: .06em; }
+.kyc-step-line { flex: 1; height: 2px; background: var(--border); margin-bottom: 18px; }
+.kyc-step-line.done { background: var(--teal); }
+.kyc-upload { border: 2px dashed var(--border); border-radius: var(--r); padding: 28px; text-align: center; background: var(--white); cursor: pointer; }
+.kyc-upload:hover { border-color: var(--teal); }
+.kyc-upload-icon { font-size: 28px; margin-bottom: 8px; }
+.kyc-upload h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.kyc-upload p  { font-size: 12px; color: var(--ink-mid); }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 11 — SUPPORT / CHAT
+   ════════════════════════════════════════════ */
+.support-wrap { display: flex; min-height: 520px; }
+.support-list { width: 220px; border-right: 1px solid var(--border); background: var(--white); }
+.support-list-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 600; }
+.support-ticket { padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
+.support-ticket.active { background: var(--teal-light); }
+.support-ticket .t-subject { font-size: 12px; font-weight: 600; color: var(--ink); }
+.support-ticket .t-preview { font-size: 11px; color: var(--ink-faint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.support-ticket .t-meta { display: flex; justify-content: space-between; margin-top: 4px; }
+.support-chat { flex: 1; display: flex; flex-direction: column; background: var(--mist); }
+.chat-header { background: var(--white); padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.chat-header .ch-name { font-size: 13px; font-weight: 600; }
+.chat-header .ch-sub  { font-size: 11px; color: var(--ink-mid); }
+.chat-msgs { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+.chat-msg { max-width: 72%; padding: 10px 13px; border-radius: 12px; font-size: 12px; line-height: 1.55; }
+.chat-msg.agent { background: var(--white); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 2px; }
+.chat-msg.user  { background: var(--navy); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
+.chat-input-row { background: var(--white); border-top: 1px solid var(--border); padding: 12px 16px; display: flex; gap: 8px; }
+.chat-input { flex: 1; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: var(--r-sm); font-family: var(--sans); font-size: 12px; background: var(--mist); }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 12 — ADMIN PORTAL
+   ════════════════════════════════════════════ */
+.admin-wrap { display: flex; }
+.admin-sidebar { width: 200px; background: #060F1C; min-height: 580px; flex-shrink: 0; }
+.admin-sidebar .brand { font-family: var(--serif); font-size: 18px; color: var(--teal); padding: 20px 18px 24px; }
+.admin-sidebar nav a { display: flex; align-items: center; gap: 8px; padding: 9px 18px; font-size: 12px; font-weight: 500; color: #4A6080; border-left: 3px solid transparent; }
+.admin-sidebar nav a.active { color: #fff; border-left-color: var(--teal); background: rgba(255,255,255,.04); }
+.admin-main { flex: 1; background: var(--mist); padding: 22px; }
+.alert-card { display: flex; align-items: center; gap: 10px; padding: 11px 14px; border-radius: var(--r-sm); margin-bottom: 8px; }
+.alert-card.danger { background: var(--red-bg); }
+.alert-card.warn   { background: var(--amber-bg); }
+.alert-card.info   { background: var(--blue-bg); }
+.alert-text .at-title { font-size: 12px; font-weight: 600; margin-bottom: 1px; }
+.alert-text .at-desc  { font-size: 11px; color: var(--ink-mid); }
+
+
+/* ════════════════════════════════════════════
+   SCREEN 13 — MOBILE APP
+   ════════════════════════════════════════════ */
+.mobile-device { width: 270px; background: var(--white); border-radius: 28px; overflow: hidden; box-shadow: var(--sh-lg); border: 2px solid #1E2D42; }
+.mobile-status { background: var(--navy); padding: 10px 18px 8px; display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10px; color: #4A6080; }
+.mobile-body { background: var(--mist); padding: 14px; }
+.mobile-toprow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.mobile-greeting .greet { font-size: 10px; color: var(--ink-faint); }
+.mobile-greeting .name  { font-size: 14px; font-weight: 600; }
+.mobile-hero-card { background: var(--navy); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+.mobile-hero-card .mh-label  { font-size: 10px; color: #4A6080; margin-bottom: 4px; }
+.mobile-hero-card .mh-amount { font-family: var(--serif); font-size: 28px; color: #fff; }
+.mobile-hero-card .mh-change { font-size: 11px; color: var(--teal); margin-top: 4px; }
+.mobile-actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 12px; }
+.m-action { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 10px 4px; text-align: center; }
+.m-action .m-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+.m-action .m-label { font-size: 9px; color: var(--ink-mid); font-weight: 500; }
+.mobile-section-title { font-size: 11px; font-weight: 700; margin-bottom: 8px; color: var(--ink); }
+.m-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 11px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.m-card-icon { width: 28px; height: 28px; border-radius: 7px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.m-card-info .m-name { font-size: 11px; font-weight: 600; }
+.m-card-info .m-sub  { font-size: 9px; color: var(--ink-faint); }
+.m-card-val { margin-left: auto; font-family: var(--mono); font-size: 11px; font-weight: 500; }
+.mobile-nav { background: var(--white); border-top: 1px solid var(--border); display: flex; padding: 8px 4px; }
+.m-nav-item { flex: 1; text-align: center; }
+.m-nav-icon { font-size: 17px; display: block; }
+.m-nav-label { font-size: 8px; color: var(--ink-faint); margin-top: 1px; }
+.m-nav-item.active .m-nav-label { color: var(--teal); }
+
+/* ══ COLOR SWATCH GUIDE ══ */
+.color-guide { padding: 24px 36px; background: var(--white); }
+.color-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.swatch { width: 80px; }
+.swatch-block { height: 56px; border-radius: var(--r-sm); margin-bottom: 6px; border: 1px solid rgba(0,0,0,.06); }
+.swatch-name  { font-size: 10px; font-weight: 600; color: var(--ink); }
+.swatch-hex   { font-family: var(--mono); font-size: 9px; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<!-- ══ CANVAS HEADER ══ -->
+<div class="canvas-header">
+  <div class="canvas-logo">Nova Wealth</div>
+  <div class="canvas-title">— OpenDesign UI File</div>
+  <div class="canvas-badge">13 Screens · SRS v1.0</div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION A — PUBLIC SITE
+     ══════════════════════════════════════════════ -->
+<div class="section-divider">A · Public Website</div>
+<div class="screens-row">
+
+  <!-- SCREEN 1: HOMEPAGE -->
+  <div>
+    <div class="screen-label">01 · Homepage</div>
+    <div class="screen w-720">
+      <div class="home-nav">
+        <div class="brand">Nova <span>Wealth</span></div>
+        <div class="links">
+          <span>How it works</span><span>Investing</span><span>Goals</span><span>Pricing</span>
+        </div>
+        <div class="ctas">
+          <button class="btn btn-ghost btn-sm">Sign in</button>
+          <button class="btn btn-primary btn-sm">Get started</button>
+        </div>
+      </div>
+      <div class="home-hero">
+        <div class="eyebrow">Smart investing, automated</div>
+        <h1>Your money, working <em>harder</em> than you do.</h1>
+        <p>Nova Wealth builds and manages a personalised portfolio based on your goals, timeline, and risk tolerance — then rebalances automatically so you don't have to.</p>
+        <div class="cta-row">
+          <button class="btn btn-primary btn-lg">Start investing free</button>
+          <button class="btn btn-ghost btn-lg" style="border-color:rgba(255,255,255,.2);color:#fff">See how it works →</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="val">$6.2B</div><div class="lbl">Assets under management</div></div>
+          <div class="hero-stat"><div class="val">98K+</div><div class="lbl">Active investors</div></div>
+          <div class="hero-stat"><div class="val">11.4%</div><div class="lbl">Avg. annual return (2025)</div></div>
+        </div>
+      </div>
+      <div class="home-features">
+        <div class="feature-cell">
+          <div class="feature-icon">📊</div>
+          <h3>Auto-rebalancing</h3>
+          <p>Your portfolio stays on target as markets shift, without lifting a finger.</p>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-icon">💸</div>
+          <h3>Tax-loss harvesting</h3>
+          <p>We capture losses to offset gains — typically saving clients thousands per year.</p>
+        </div>
+        <div class="feature-cell">
+          <div class="feature-icon">🎯</div>
+          <h3>Goal-based investing</h3>
+          <p>Set a target. We'll tell you exactly how to get there.</p>
+        </div>
+        <div class="feature-cell" style="border-bottom:none">
+          <div class="feature-icon">🏦</div>
+          <h3>High-yield cash account</h3>
+          <p>Earn 4.8% APY on uninvested cash. No minimums, no fees.</p>
+        </div>
+        <div class="feature-cell" style="border-bottom:none">
+          <div class="feature-icon">🔒</div>
+          <h3>Bank-grade security</h3>
+          <p>256-bit encryption, MFA, and SOC 2 Type II certification.</p>
+        </div>
+        <div class="feature-cell" style="border-bottom:none">
+          <div class="feature-icon">🤖</div>
+          <h3>AI financial advisor</h3>
+          <p>Get personalised guidance based on your complete financial picture.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION B — AUTHENTICATION & KYC
+     ══════════════════════════════════════════════ -->
+<div class="section-divider">B · Authentication &amp; KYC</div>
+<div class="screens-row">
+
+  <!-- SCREEN 2: SIGN UP -->
+  <div>
+    <div class="screen-label">02 · Create Account</div>
+    <div class="screen w-720">
+      <div class="auth-split">
+        <div class="auth-left">
+          <div class="brand">Nova Wealth</div>
+          <h2>Start building wealth today.</h2>
+          <p>Join 98,000+ investors growing their portfolios with automated, tax-optimised investing.</p>
+          <div class="trust-items">
+            <div class="trust-item"><span class="trust-check">✓</span> No account minimum to start</div>
+            <div class="trust-item"><span class="trust-check">✓</span> 0.25% annual advisory fee</div>
+            <div class="trust-item"><span class="trust-check">✓</span> SIPC insured up to $500,000</div>
+            <div class="trust-item"><span class="trust-check">✓</span> Cancel or withdraw anytime</div>
+          </div>
+        </div>
+        <div class="auth-right">
+          <h3>Create your account</h3>
+          <div class="sub">Already have one? <span style="color:var(--teal);cursor:pointer">Sign in</span></div>
+          <button class="social-btn">🇬 Continue with Google</button>
+          <button class="social-btn">🍎 Continue with Apple</button>
+          <div class="or-divider">or sign up with email</div>
+          <div class="row">
+            <div class="col"><div class="input-wrap"><label>First name</label><input value="Amara"></div></div>
+            <div class="col"><div class="input-wrap"><label>Last name</label><input value="Osei"></div></div>
+          </div>
+          <div class="input-wrap"><label>Email address</label><input value="amara.osei@example.com"></div>
+          <div class="input-wrap"><label>Password</label><input type="password" value="••••••••••"><div class="hint">Minimum 12 characters, include a number and symbol.</div></div>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:10px">Create account →</button>
+          <div style="font-size:11px;color:var(--ink-faint);text-align:center">By creating an account you agree to our <span style="color:var(--teal)">Terms</span> and <span style="color:var(--teal)">Privacy Policy</span>.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: MFA -->
+  <div>
+    <div class="screen-label">03 · MFA Verification</div>
+    <div class="screen w-360">
+      <div style="padding:36px">
+        <div style="font-family:var(--serif);font-size:22px;color:var(--navy);margin-bottom:6px">Verify it's you</div>
+        <div style="font-size:12px;color:var(--ink-mid);margin-bottom:24px">We sent a 6-digit code to <strong>+234 ••• •• 7821</strong>. Enter it below.</div>
+        <div class="mfa-row">
+          <div class="mfa-box filled">5</div>
+          <div class="mfa-box filled">8</div>
+          <div class="mfa-box filled">3</div>
+          <div class="mfa-box" style="border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-light)">·</div>
+          <div class="mfa-box">·</div>
+          <div class="mfa-box">·</div>
+        </div>
+        <div style="font-size:11px;color:var(--ink-faint);margin-bottom:20px">Code expires in <strong style="color:var(--amber)">4:32</strong></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:10px">Verify →</button>
+        <div style="font-size:11px;color:var(--teal);text-align:center;cursor:pointer">Resend code</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: KYC -->
+  <div>
+    <div class="screen-label">04 · KYC Verification</div>
+    <div class="screen w-520">
+      <div class="kyc-wrap">
+        <!-- Step bar -->
+        <div style="display:flex;align-items:center;margin-bottom:28px;gap:0">
+          <div class="kyc-step">
+            <div class="kyc-step-circle done">✓</div>
+            <div class="kyc-step-label">Personal</div>
+          </div>
+          <div class="kyc-step-line done" style="margin-bottom:10px"></div>
+          <div class="kyc-step">
+            <div class="kyc-step-circle done">✓</div>
+            <div class="kyc-step-label">Address</div>
+          </div>
+          <div class="kyc-step-line done" style="margin-bottom:10px"></div>
+          <div class="kyc-step">
+            <div class="kyc-step-circle active">3</div>
+            <div class="kyc-step-label">Identity</div>
+          </div>
+          <div class="kyc-step-line" style="margin-bottom:10px"></div>
+          <div class="kyc-step">
+            <div class="kyc-step-circle">4</div>
+            <div class="kyc-step-label">Review</div>
+          </div>
+        </div>
+
+        <div style="font-family:var(--serif);font-size:22px;margin-bottom:6px">Upload your ID</div>
+        <div style="font-size:12px;color:var(--ink-mid);margin-bottom:20px">We need to verify your identity to comply with financial regulations. Your data is encrypted and never shared.</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">
+          <div class="kyc-upload">
+            <div class="kyc-upload-icon">🪪</div>
+            <h4>Front of ID</h4>
+            <p>National ID, passport, or driver's licence</p>
+          </div>
+          <div class="kyc-upload" style="border-color:var(--teal);background:var(--teal-light)">
+            <div class="kyc-upload-icon">✅</div>
+            <h4>Back of ID</h4>
+            <p style="color:var(--teal-dark)">Uploaded — looks good!</p>
+          </div>
+        </div>
+
+        <div class="input-wrap"><label>Document type</label>
+          <select><option>National Identity Card (NIN)</option><option>International Passport</option><option>Driver's Licence</option></select>
+        </div>
+        <div class="input-wrap"><label>Document number</label><input value="A49281746"></div>
+
+        <div style="display:flex;gap:10px;margin-top:4px">
+          <button class="btn btn-ghost col" style="justify-content:center">← Back</button>
+          <button class="btn btn-primary col" style="justify-content:center">Continue →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION C — USER PORTAL
+     ══════════════════════════════════════════════ -->
+<div class="section-divider">C · User Portal</div>
+<div class="screens-row">
+
+  <!-- SCREEN 5: DASHBOARD -->
+  <div>
+    <div class="screen-label">05 · User Dashboard</div>
+    <div class="screen w-900">
+      <div class="dash-wrap">
+        <div class="sidebar">
+          <div class="sidebar-brand">Nova Wealth</div>
+          <nav>
+            <a href="#" class="active"><span class="ico">◼</span> Dashboard</a>
+            <a href="#"><span class="ico">◈</span> Portfolio</a>
+            <a href="#"><span class="ico">◎</span> Goals</a>
+            <a href="#"><span class="ico">↕</span> Transactions</a>
+            <a href="#"><span class="ico">💳</span> Funding</a>
+            <a href="#"><span class="ico">📊</span> Analytics</a>
+            <a href="#"><span class="ico">📄</span> Statements</a>
+            <a href="#"><span class="ico">🔔</span> Notifications</a>
+            <a href="#"><span class="ico">💬</span> Support</a>
+            <a href="#"><span class="ico">⚙</span> Settings</a>
+          </nav>
+          <div class="sidebar-footer">
+            <div class="sidebar-user">
+              <div class="sidebar-avatar">AO</div>
+              <div class="sidebar-user-info">
+                <div class="name">Amara Osei</div>
+                <div class="role">Premium Investor</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-main">
+          <div class="dash-toprow">
+            <div class="dash-greeting">
+              <h2>Good morning, Amara 👋</h2>
+              <p>Here's your financial snapshot for today.</p>
+            </div>
+            <button class="btn btn-primary btn-sm">+ Add Funds</button>
+          </div>
+
+          <div class="kpi-row">
+            <div class="card">
+              <div class="card-label">Total Portfolio</div>
+              <div class="card-value">$312,480</div>
+              <div class="card-sub up">↑ +$5,840 this month</div>
+            </div>
+            <div class="card">
+              <div class="card-label">Annual Return</div>
+              <div class="card-value">+12.6%</div>
+              <div class="card-sub" style="color:var(--ink-faint)">vs 9.4% S&P 500</div>
+            </div>
+            <div class="card">
+              <div class="card-label">Goals on Track</div>
+              <div class="card-value">4 / 5</div>
+              <div class="card-sub" style="color:var(--amber)">1 needs attention</div>
+            </div>
+          </div>
+
+          <div class="perf-chart-wrap">
+            <div class="perf-header">
+              <div class="perf-title">Portfolio Performance</div>
+              <div class="tab-group">
+                <div class="tab">1W</div>
+                <div class="tab active">1M</div>
+                <div class="tab">3M</div>
+                <div class="tab">1Y</div>
+                <div class="tab">All</div>
+              </div>
+            </div>
+            <svg class="line-chart-svg" viewBox="0 0 560 90" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="lgrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#0AB68B" stop-opacity=".25"/>
+                  <stop offset="100%" stop-color="#0AB68B" stop-opacity="0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,70 C30,65 50,55 90,50 S150,38 200,35 S280,24 340,20 S420,14 480,10 S530,8 560,6" fill="none" stroke="#0AB68B" stroke-width="2.5"/>
+              <path d="M0,70 C30,65 50,55 90,50 S150,38 200,35 S280,24 340,20 S420,14 480,10 S530,8 560,6 L560,90 L0,90 Z" fill="url(#lgrad)"/>
+              <circle cx="560" cy="6" r="4" fill="#0AB68B"/>
+            </svg>
+          </div>
+
+          <div class="tx-list">
+            <div class="tx-header">
+              <span style="font-size:13px;font-weight:600">Recent Transactions</span>
+              <span style="font-size:12px;color:var(--teal);cursor:pointer">View all →</span>
+            </div>
+            <div class="tx-row">
+              <div class="tx-icon">📈</div>
+              <div class="tx-info"><div class="tx-name">Auto-rebalance executed</div><div class="tx-date">Jun 10, 2026 · 09:14 AM</div></div>
+              <span class="badge badge-teal">Completed</span>
+              <div class="tx-amount up">+$2,180</div>
+            </div>
+            <div class="tx-row">
+              <div class="tx-icon">💰</div>
+              <div class="tx-info"><div class="tx-name">Monthly auto-deposit</div><div class="tx-date">Jun 5, 2026 · 08:00 AM</div></div>
+              <span class="badge badge-teal">Completed</span>
+              <div class="tx-amount up">+$1,500</div>
+            </div>
+            <div class="tx-row">
+              <div class="tx-icon">🏠</div>
+              <div class="tx-info"><div class="tx-name">Home goal allocation</div><div class="tx-date">Jun 1, 2026 · 12:00 PM</div></div>
+              <span class="badge badge-navy">Scheduled</span>
+              <div class="tx-amount down">−$600</div>
+            </div>
+            <div class="tx-row">
+              <div class="tx-icon">💸</div>
+              <div class="tx-info"><div class="tx-name">Tax-loss harvest</div><div class="tx-date">May 28, 2026 · 03:42 PM</div></div>
+              <span class="badge badge-blue">Tax benefit</span>
+              <div class="tx-amount up">$820 saved</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="screens-row">
+
+  <!-- SCREEN 6: PORTFOLIO -->
+  <div>
+    <div class="screen-label">06 · Investment Portfolio</div>
+    <div class="screen w-720">
+      <div style="display:flex">
+        <div class="sidebar" style="min-height:560px">
+          <div class="sidebar-brand">Nova Wealth</div>
+          <nav>
+            <a href="#"><span class="ico">◼</span> Dashboard</a>
+            <a href="#" class="active"><span class="ico">◈</span> Portfolio</a>
+            <a href="#"><span class="ico">◎</span> Goals</a>
+            <a href="#"><span class="ico">↕</span> Transactions</a>
+          </nav>
+        </div>
+        <div class="port-main">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div style="font-size:16px;font-weight:600">Investment Portfolio</div>
+            <button class="btn btn-primary btn-sm">Rebalance now</button>
+          </div>
+
+          <div class="card" style="margin-bottom:14px">
+            <div style="display:flex;gap:20px;align-items:center">
+              <div class="pie"></div>
+              <div class="legend">
+                <div class="legend-row"><div class="legend-dot" style="background:var(--teal)"></div><div style="flex:1;font-size:12px">US Equities (VTI)</div><div style="font-weight:600;font-size:12px">40%</div></div>
+                <div class="legend-row"><div class="legend-dot" style="background:var(--blue)"></div><div style="flex:1;font-size:12px">Intl. Equities (VXUS)</div><div style="font-weight:600;font-size:12px">22%</div></div>
+                <div class="legend-row"><div class="legend-dot" style="background:var(--amber)"></div><div style="flex:1;font-size:12px">Real Assets (VNQ)</div><div style="font-weight:600;font-size:12px">18%</div></div>
+                <div class="legend-row"><div class="legend-dot" style="background:#CBD5E0"></div><div style="flex:1;font-size:12px">Bonds / Cash</div><div style="font-weight:600;font-size:12px">20%</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:14px">
+            <div class="card-label">Risk Level</div>
+            <div class="gauge-track"><div class="gauge-pin" style="left:60%"></div></div>
+            <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-faint)"><span>Conservative</span><span>Moderate</span><span>Aggressive</span></div>
+            <div style="margin-top:8px;font-size:12px;color:var(--ink-mid)">Your score: <strong style="color:var(--amber)">6.4 / 10 — Moderate Growth</strong></div>
+          </div>
+
+          <div class="holdings-table">
+            <div style="padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;font-weight:600">Holdings</div>
+            <table>
+              <tr><th>Asset</th><th>Value</th><th>Alloc.</th><th>Day</th><th>Total</th></tr>
+              <tr><td class="strong">VTI — US Total Mkt</td><td>$124,992</td><td>40%</td><td class="up">+1.8%</td><td class="up">+$22,400</td></tr>
+              <tr><td class="strong">VXUS — Intl Mkt</td><td>$68,745</td><td>22%</td><td class="down">−0.6%</td><td class="up">+$4,100</td></tr>
+              <tr><td class="strong">VNQ — Real Estate</td><td>$56,246</td><td>18%</td><td class="up">+0.9%</td><td class="up">+$6,820</td></tr>
+              <tr><td class="strong">BND — US Bonds</td><td>$62,497</td><td>20%</td><td class="up">+0.2%</td><td class="up">+$1,240</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 7: GOALS -->
+  <div>
+    <div class="screen-label">07 · Financial Goals</div>
+    <div class="screen w-420">
+      <div class="topbar">
+        <div class="topbar-brand">Nova <span>Wealth</span></div>
+        <div class="topbar-spacer"></div>
+        <button class="btn btn-primary btn-sm">+ New Goal</button>
+        <div class="topbar-avatar">AO</div>
+      </div>
+      <div class="goals-main">
+        <div style="font-size:16px;font-weight:600;margin-bottom:4px">Your Goals</div>
+        <div style="font-size:12px;color:var(--ink-mid);margin-bottom:16px">5 goals · 4 on track · 1 behind</div>
+
+        <div class="goal-card">
+          <div class="goal-head"><div><div class="goal-name">🏠 Buy a Home</div><div class="goal-meta">Target $140,000 · Dec 2028</div></div><span class="badge badge-teal">On Track</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:72%"></div></div>
+          <div class="goal-amounts"><span>$100,800 saved</span><span>72%</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-head"><div><div class="goal-name">🎓 Kids' Education</div><div class="goal-meta">Target $90,000 · Aug 2032</div></div><span class="badge badge-teal">On Track</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:38%"></div></div>
+          <div class="goal-amounts"><span>$34,200 saved</span><span>38%</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-head"><div><div class="goal-name">✈️ Sabbatical</div><div class="goal-meta">Target $25,000 · Mar 2027</div></div><span class="badge badge-amber">Behind</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:18%;background:var(--amber)"></div></div>
+          <div class="goal-amounts"><span>$4,500 saved</span><span>18%</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-head"><div><div class="goal-name">🌴 Retirement</div><div class="goal-meta">Target $1.5M · 2052</div></div><span class="badge badge-blue">Long-term</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:11%"></div></div>
+          <div class="goal-amounts"><span>$165,000 saved</span><span>11%</span></div>
+        </div>
+        <div class="goal-card">
+          <div class="goal-head"><div><div class="goal-name">🚗 New Car</div><div class="goal-meta">Target $38,000 · Jun 2027</div></div><span class="badge badge-teal">On Track</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:54%"></div></div>
+          <div class="goal-amounts"><span>$20,520 saved</span><span>54%</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="screens-row">
+
+  <!-- SCREEN 8: FUNDING & TRANSFERS -->
+  <div>
+    <div class="screen-label">08 · Funding &amp; Transfers</div>
+    <div class="screen w-420">
+      <div class="topbar">
+        <div class="topbar-brand">Nova <span>Wealth</span></div>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-avatar">AO</div>
+      </div>
+      <div class="funding-main">
+        <div style="font-size:16px;font-weight:600;margin-bottom:16px">Add Funds</div>
+
+        <div style="font-size:12px;font-weight:600;color:var(--ink-mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">From account</div>
+        <div class="account-card selected">
+          <div class="account-bank">GT</div>
+          <div class="account-info"><div class="bank-name">GTBank</div><div class="acct-num">••••  ••••  4821</div></div>
+          <div class="account-bal up">$12,450</div>
+          <span style="color:var(--teal);font-size:16px">✓</span>
+        </div>
+        <div class="account-card">
+          <div class="account-bank">ZT</div>
+          <div class="account-info"><div class="bank-name">Zenith Bank</div><div class="acct-num">••••  ••••  2290</div></div>
+          <div class="account-bal">$4,100</div>
+        </div>
+        <div class="account-card" style="border-style:dashed;cursor:pointer;justify-content:center;gap:6px;color:var(--teal)">
+          <span style="font-size:18px">＋</span> Link a new account
+        </div>
+
+        <div class="divider"></div>
+        <div class="input-wrap"><label>Amount to deposit</label><input value="$5,000.00"></div>
+        <div class="input-wrap"><label>Destination</label>
+          <select><option>Investment Portfolio (default)</option><option>Home Goal</option><option>Cash Account</option></select>
+        </div>
+        <div class="input-wrap"><label>Frequency</label>
+          <select><option>One-time deposit</option><option>Weekly</option><option>Monthly</option></select>
+        </div>
+        <div class="card" style="background:var(--teal-light);border-color:var(--teal);margin-bottom:14px">
+          <div style="font-size:12px;color:var(--teal-dark)">💡 <strong>Tip:</strong> Switching to monthly auto-deposits could grow your portfolio by an extra <strong>$14,200</strong> over 3 years.</div>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center">Confirm deposit →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 9: ANALYTICS -->
+  <div>
+    <div class="screen-label">09 · Analytics &amp; Reports</div>
+    <div class="screen w-560">
+      <div style="display:flex">
+        <div class="sidebar" style="min-height:540px;width:180px">
+          <div class="sidebar-brand">Nova Wealth</div>
+          <nav>
+            <a href="#"><span class="ico">◼</span> Dashboard</a>
+            <a href="#" class="active"><span class="ico">📊</span> Analytics</a>
+          </nav>
+        </div>
+        <div class="analytics-main">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+            <div style="font-size:15px;font-weight:600">Analytics</div>
+            <button class="btn btn-ghost btn-sm">↓ Export</button>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+            <span class="badge badge-teal" style="cursor:pointer">YTD</span>
+            <span class="badge badge-navy" style="cursor:pointer">Q2 2026</span>
+            <span class="badge badge-navy" style="cursor:pointer">2025</span>
+            <span class="badge badge-navy" style="cursor:pointer">Custom</span>
+          </div>
+          <div class="analytics-grid">
+            <div class="card">
+              <div class="card-label">Total Return</div>
+              <div style="font-family:var(--serif);font-size:22px;color:var(--teal)">+$42,600</div>
+              <div style="font-size:11px;color:var(--ink-faint)">Since inception · Nov 2022</div>
+            </div>
+            <div class="card">
+              <div class="card-label">Tax Saved</div>
+              <div style="font-family:var(--serif);font-size:22px">$6,240</div>
+              <div style="font-size:11px;color:var(--ink-faint)">via Tax-Loss Harvesting</div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:12px">
+            <div style="font-size:12px;font-weight:600;margin-bottom:8px">Monthly performance</div>
+            <div class="bar-chart">
+              <div class="bar" style="height:38%"></div>
+              <div class="bar" style="height:55%"></div>
+              <div class="bar" style="height:42%"></div>
+              <div class="bar" style="height:70%"></div>
+              <div class="bar" style="height:48%"></div>
+              <div class="bar" style="height:82%"></div>
+              <div class="bar" style="height:65%"></div>
+              <div class="bar" style="height:90%"></div>
+              <div class="bar" style="height:72%"></div>
+              <div class="bar hi" style="height:95%"></div>
+              <div class="bar" style="height:78%"></div>
+              <div class="bar hi" style="height:100%"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--ink-faint);margin-top:5px;padding:0 4px">
+              <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+            </div>
+          </div>
+          <table>
+            <tr><th>Period</th><th>Return</th><th>Benchmark</th><th>Alpha</th></tr>
+            <tr><td>Q2 2026</td><td class="up strong">+4.8%</td><td>+3.4%</td><td class="up">+1.4%</td></tr>
+            <tr><td>Q1 2026</td><td class="up strong">+7.2%</td><td>+5.6%</td><td class="up">+1.6%</td></tr>
+            <tr><td>2025 Full Year</td><td class="up strong">+12.6%</td><td>+9.4%</td><td class="up">+3.2%</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="screens-row">
+
+  <!-- SCREEN 10: NOTIFICATIONS -->
+  <div>
+    <div class="screen-label">10 · Notifications</div>
+    <div class="screen w-420">
+      <div class="topbar">
+        <div class="topbar-brand">Nova <span>Wealth</span></div>
+        <div class="topbar-spacer"></div>
+        <div style="position:relative;display:inline-flex">
+          <span style="font-size:20px">🔔</span>
+          <div class="notif-dot"></div>
+        </div>
+        <div class="topbar-avatar">AO</div>
+      </div>
+      <div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:14px;font-weight:600">Notifications</div>
+        <span style="font-size:12px;color:var(--teal);cursor:pointer">Mark all read</span>
+      </div>
+      <div class="notif-list">
+        <div class="notif-item unread">
+          <div class="notif-icon teal">📈</div>
+          <div class="notif-body">
+            <div class="notif-title">Portfolio rebalanced</div>
+            <div class="notif-desc">Your portfolio was rebalanced. US Equities sold down to 40% target. $2,180 reallocated to bonds.</div>
+            <div class="notif-time">Today · 9:14 AM</div>
+          </div>
+          <div class="unread-pip"></div>
+        </div>
+        <div class="notif-item unread">
+          <div class="notif-icon amber">⚠️</div>
+          <div class="notif-body">
+            <div class="notif-title">Sabbatical goal behind schedule</div>
+            <div class="notif-desc">Your Sabbatical fund is 18% funded but you need 35% by now to stay on track. Consider increasing contributions by $200/month.</div>
+            <div class="notif-time">Yesterday · 4:30 PM</div>
+          </div>
+          <div class="unread-pip"></div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon teal">💰</div>
+          <div class="notif-body">
+            <div class="notif-title">Auto-deposit processed</div>
+            <div class="notif-desc">$1,500 has been deposited into your portfolio from GTBank ••4821.</div>
+            <div class="notif-time">Jun 5, 2026</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon amber">💸</div>
+          <div class="notif-body">
+            <div class="notif-title">Tax-loss harvest opportunity</div>
+            <div class="notif-desc">We identified $820 in harvestable losses in VXUS. This has been executed automatically.</div>
+            <div class="notif-time">May 28, 2026</div>
+          </div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-icon teal">📄</div>
+          <div class="notif-body">
+            <div class="notif-title">Q1 2026 statement ready</div>
+            <div class="notif-desc">Your quarterly account statement is now available in Documents.</div>
+            <div class="notif-time">Apr 3, 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 11: STATEMENTS -->
+  <div>
+    <div class="screen-label">11 · Statements &amp; Documents</div>
+    <div class="screen w-420">
+      <div class="topbar">
+        <div class="topbar-brand">Nova <span>Wealth</span></div>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-avatar">AO</div>
+      </div>
+      <div style="padding:18px">
+        <div style="font-size:15px;font-weight:600;margin-bottom:4px">Documents</div>
+        <div style="font-size:12px;color:var(--ink-mid);margin-bottom:16px">Statements, tax forms, and account documents.</div>
+
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);margin-bottom:8px">2026</div>
+        <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+          <div class="doc-row">
+            <div class="doc-icon">📊</div>
+            <div class="doc-info"><div class="doc-name">Q2 2026 Account Statement</div><div class="doc-meta">PDF · 142 KB · Jun 30, 2026</div></div>
+            <button class="btn btn-ghost btn-sm">↓</button>
+          </div>
+          <div class="doc-row">
+            <div class="doc-icon">📊</div>
+            <div class="doc-info"><div class="doc-name">Q1 2026 Account Statement</div><div class="doc-meta">PDF · 138 KB · Mar 31, 2026</div></div>
+            <button class="btn btn-ghost btn-sm">↓</button>
+          </div>
+        </div>
+
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);margin-bottom:8px">Tax Documents</div>
+        <div class="card" style="padding:0;overflow:hidden;margin-bottom:14px">
+          <div class="doc-row">
+            <div class="doc-icon" style="background:var(--red-bg)">🧾</div>
+            <div class="doc-info"><div class="doc-name">2025 Form 1099-DIV</div><div class="doc-meta">PDF · 88 KB · Jan 31, 2026</div></div>
+            <button class="btn btn-ghost btn-sm">↓</button>
+          </div>
+          <div class="doc-row">
+            <div class="doc-icon" style="background:var(--red-bg)">🧾</div>
+            <div class="doc-info"><div class="doc-name">2025 Tax-Loss Harvest Report</div><div class="doc-meta">PDF · 64 KB · Jan 31, 2026</div></div>
+            <button class="btn btn-ghost btn-sm">↓</button>
+          </div>
+        </div>
+
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint);margin-bottom:8px">Account</div>
+        <div class="card" style="padding:0;overflow:hidden">
+          <div class="doc-row">
+            <div class="doc-icon" style="background:var(--amber-bg)">📝</div>
+            <div class="doc-info"><div class="doc-name">Investment Advisory Agreement</div><div class="doc-meta">PDF · 210 KB · Nov 14, 2022</div></div>
+            <button class="btn btn-ghost btn-sm">↓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 12: SUPPORT -->
+  <div>
+    <div class="screen-label">12 · Customer Support</div>
+    <div class="screen w-560">
+      <div class="support-wrap">
+        <div class="support-list">
+          <div class="support-list-header">Support</div>
+          <div class="support-ticket active">
+            <div class="t-subject">Withdrawal delay</div>
+            <div class="t-preview">My $2,000 withdrawal hasn't…</div>
+            <div class="t-meta"><span class="badge badge-amber" style="font-size:9px">In progress</span><span style="font-size:10px;color:var(--ink-faint)">2h ago</span></div>
+          </div>
+          <div class="support-ticket">
+            <div class="t-subject">Link bank account</div>
+            <div class="t-preview">How do I add a second bank…</div>
+            <div class="t-meta"><span class="badge badge-teal" style="font-size:9px">Resolved</span><span style="font-size:10px;color:var(--ink-faint)">Jun 8</span></div>
+          </div>
+          <div class="support-ticket">
+            <div class="t-subject">KYC document rejection</div>
+            <div class="t-preview">My passport was rejected…</div>
+            <div class="t-meta"><span class="badge badge-teal" style="font-size:9px">Resolved</span><span style="font-size:10px;color:var(--ink-faint)">Jun 2</span></div>
+          </div>
+          <div style="padding:12px 14px">
+            <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center">+ New ticket</button>
+          </div>
+        </div>
+        <div class="support-chat">
+          <div class="chat-header">
+            <div class="ch-name">Withdrawal delay — #TKT-20841</div>
+            <div class="ch-sub">Agent: Fatima Aliyu · <span style="color:var(--teal)">Online</span></div>
+          </div>
+          <div class="chat-msgs">
+            <div class="chat-msg agent">Hi Amara, I can see your withdrawal request for $2,000 submitted on Jun 9. It's currently in our compliance review queue — this can take up to 2 business days. I'll flag it for priority review.</div>
+            <div class="chat-msg user">Thank you! Is there anything I can do to speed it up?</div>
+            <div class="chat-msg agent">No action needed from you — I've already escalated it. You should see the funds in your GTBank account by end of business tomorrow. I'll send you an email confirmation once it clears.</div>
+          </div>
+          <div class="chat-input-row">
+            <input class="chat-input" placeholder="Type a message…">
+            <button class="btn btn-primary btn-sm">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION D — ADMIN PORTAL
+     ══════════════════════════════════════════════ -->
+<div class="section-divider">D · Admin Portal</div>
+<div class="screens-row">
+
+  <!-- SCREEN 13: ADMIN DASHBOARD -->
+  <div>
+    <div class="screen-label">13 · Admin Console</div>
+    <div class="screen w-900">
+      <div class="admin-wrap">
+        <div class="admin-sidebar">
+          <div class="brand" style="font-family:var(--serif);font-size:18px;color:var(--teal);padding:20px 18px 24px">Nova Admin</div>
+          <nav>
+            <a href="#" class="active" style="display:flex;align-items:center;gap:8px;padding:9px 18px;font-size:12px;font-weight:500;border-left:3px solid var(--teal);color:#fff;background:rgba(255,255,255,.04)"><span>◼</span> Overview</a>
+            <a href="#" style="display:flex;align-items:center;gap:8px;padding:9px 18px;font-size:12px;font-weight:500;border-left:3px solid transparent;color:#4A6080"><span>👥</span> Users</a>
+            <a href="#" style="display:flex;align-items:center;gap:8px;padding:9px 18px;font-size:12px;font-weight:500;border-left:3px solid transparent;color:#4A6080"><span>⚠</span> Risk Alerts</a>
+            <a href="#" style="display:flex;align-items:center;gap:8px;padding:9px 18px;font-size:12px;font-weight:500;border-left:3px solid transparent;color:#4A6080"><span>📋</span> Compliance</a>
+            <a href="#" style="display:flex;align-items:center;gap:8px;padding:9px 18px;font-size:12px;font-weight:500;border-left:3px solid transparent;color:#4A6080"><span>📊</span> Reports</a>
+            <a href="#" style="display:flex;align-items:center;gap:8px;padding:9px 18px;font-size:12px;font-weight:500;border-left:3px solid transparent;color:#4A6080"><span>⚙</span> Settings</a>
+          </nav>
+        </div>
+        <div class="admin-main">
+          <div style="font-size:16px;font-weight:600;margin-bottom:16px">Admin Overview</div>
+
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px">
+            <div class="card" style="padding:14px">
+              <div class="card-label">Total Users</div>
+              <div style="font-family:var(--serif);font-size:22px">98,241</div>
+              <div style="font-size:11px;color:var(--teal)">+1,482 this week</div>
+            </div>
+            <div class="card" style="padding:14px">
+              <div class="card-label">Assets Under Mgmt</div>
+              <div style="font-family:var(--serif);font-size:22px">$6.2B</div>
+              <div style="font-size:11px;color:var(--teal)">↑ +1.6% MTD</div>
+            </div>
+            <div class="card" style="padding:14px">
+              <div class="card-label">Pending KYC</div>
+              <div style="font-family:var(--serif);font-size:22px;color:var(--amber)">84</div>
+              <div style="font-size:11px;color:var(--amber)">Awaiting review</div>
+            </div>
+            <div class="card" style="padding:14px">
+              <div class="card-label">Open Alerts</div>
+              <div style="font-family:var(--serif);font-size:22px;color:var(--red)">9</div>
+              <div style="font-size:11px;color:var(--red)">3 critical</div>
+            </div>
+          </div>
+
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px">Risk &amp; Compliance Alerts</div>
+          <div class="alert-card danger">
+            <span style="font-size:18px">🔴</span>
+            <div class="alert-text"><div class="at-title">Suspicious login — User #481920</div><div class="at-desc">3 failed MFA attempts from unrecognised device in Lagos. Account locked.</div></div>
+            <button class="btn btn-ghost btn-sm">Review</button>
+          </div>
+          <div class="alert-card danger">
+            <span style="font-size:18px">🔴</span>
+            <div class="alert-text"><div class="at-title">Large withdrawal flagged — $48,000</div><div class="at-desc">User #209401 — above $25,000 AML threshold. Manual review required.</div></div>
+            <button class="btn btn-ghost btn-sm">Review</button>
+          </div>
+          <div class="alert-card warn">
+            <span style="font-size:18px">🟡</span>
+            <div class="alert-text"><div class="at-title">Concentration risk — 6 accounts</div><div class="at-desc">Over 85% in single equity class. System has auto-notified affected users.</div></div>
+            <button class="btn btn-ghost btn-sm">Review</button>
+          </div>
+          <div class="alert-card info" style="margin-bottom:14px">
+            <span style="font-size:18px">🔵</span>
+            <div class="alert-text"><div class="at-title">84 KYC documents awaiting review</div><div class="at-desc">Average wait time: 18 hours. SLA breach risk in 6 hours.</div></div>
+            <button class="btn btn-ghost btn-sm">Review</button>
+          </div>
+
+          <div style="font-size:13px;font-weight:600;margin-bottom:10px">User Management</div>
+          <div class="tbl-wrap">
+            <table>
+              <tr><th>User</th><th>Tier</th><th>AUM</th><th>KYC</th><th>Status</th><th>Joined</th><th></th></tr>
+              <tr>
+                <td><div class="strong">Amara Osei</div><div style="font-size:10px;color:var(--ink-faint)">amara@example.com</div></td>
+                <td><span class="badge badge-teal">Premium</span></td>
+                <td class="strong">$312,480</td>
+                <td><span class="badge badge-teal">Verified</span></td>
+                <td><span class="badge badge-teal">Active</span></td>
+                <td style="font-size:11px">Nov 2022</td>
+                <td><button class="btn btn-ghost btn-sm">View</button></td>
+              </tr>
+              <tr>
+                <td><div class="strong">Emeka Nwosu</div><div style="font-size:10px;color:var(--ink-faint)">emeka@example.com</div></td>
+                <td><span class="badge badge-navy">Retail</span></td>
+                <td class="strong">$58,200</td>
+                <td><span class="badge badge-teal">Verified</span></td>
+                <td><span class="badge badge-teal">Active</span></td>
+                <td style="font-size:11px">Mar 2024</td>
+                <td><button class="btn btn-ghost btn-sm">View</button></td>
+              </tr>
+              <tr>
+                <td><div class="strong">Aisha Bello</div><div style="font-size:10px;color:var(--ink-faint)">aisha@example.com</div></td>
+                <td><span class="badge badge-teal">Premium</span></td>
+                <td class="strong">$648,900</td>
+                <td><span class="badge badge-amber">Pending</span></td>
+                <td><span class="badge badge-amber">Review</span></td>
+                <td style="font-size:11px">Jan 2023</td>
+                <td><button class="btn btn-ghost btn-sm">View</button></td>
+              </tr>
+              <tr>
+                <td><div class="strong">Tunde Alabi</div><div style="font-size:10px;color:var(--ink-faint)">tunde@example.com</div></td>
+                <td><span class="badge badge-navy">Retail</span></td>
+                <td class="strong">$22,100</td>
+                <td><span class="badge badge-teal">Verified</span></td>
+                <td><span class="badge badge-red">Locked</span></td>
+                <td style="font-size:11px">Aug 2024</td>
+                <td><button class="btn btn-ghost btn-sm">View</button></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     SECTION E — MOBILE APP
+     ══════════════════════════════════════════════ -->
+<div class="section-divider">E · Mobile App</div>
+<div class="screens-row">
+
+  <div>
+    <div class="screen-label">Mobile · Dashboard</div>
+    <div class="mobile-device">
+      <div class="mobile-status"><span>9:41</span><span>●●● WiFi</span></div>
+      <div class="mobile-body">
+        <div class="mobile-toprow">
+          <div class="mobile-greeting"><div class="greet">Good morning,</div><div class="name">Amara 👋</div></div>
+          <div class="topbar-avatar" style="width:30px;height:30px;font-size:10px">AO</div>
+        </div>
+        <div class="mobile-hero-card">
+          <div class="mh-label">Total Portfolio</div>
+          <div class="mh-amount">$312,480</div>
+          <div class="mh-change">↑ +$5,840 this month (+1.9%)</div>
+        </div>
+        <div class="mobile-actions">
+          <div class="m-action"><span class="m-icon">＋</span><span class="m-label">Add</span></div>
+          <div class="m-action"><span class="m-icon">↗</span><span class="m-label">Invest</span></div>
+          <div class="m-action"><span class="m-icon">↙</span><span class="m-label">Withdraw</span></div>
+          <div class="m-action"><span class="m-icon">✦</span><span class="m-label">Advisor</span></div>
+        </div>
+        <div class="mobile-section-title">Goals</div>
+        <div class="m-card"><div class="m-card-icon">🏠</div><div class="m-card-info"><div class="m-name">Buy a Home</div><div class="m-sub">72% · On Track</div></div><div class="m-card-val up">$100.8k</div></div>
+        <div class="m-card"><div class="m-card-icon">🎓</div><div class="m-card-info"><div class="m-name">Kids' Education</div><div class="m-sub">38% · On Track</div></div><div class="m-card-val up">$34.2k</div></div>
+        <div class="m-card"><div class="m-card-icon">✈️</div><div class="m-card-info"><div class="m-name">Sabbatical</div><div class="m-sub">18% · Behind</div></div><div class="m-card-val" style="color:var(--amber)">$4.5k</div></div>
+      </div>
+      <div class="mobile-nav">
+        <div class="m-nav-item active"><span class="m-nav-icon">◼</span><div class="m-nav-label" style="color:var(--teal)">Home</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">◈</span><div class="m-nav-label">Portfolio</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">◎</span><div class="m-nav-label">Goals</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">📊</span><div class="m-nav-label">Analytics</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">👤</span><div class="m-nav-label">Profile</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <div class="screen-label">Mobile · Portfolio</div>
+    <div class="mobile-device">
+      <div class="mobile-status"><span>9:41</span><span>●●● WiFi</span></div>
+      <div class="mobile-body">
+        <div style="font-size:15px;font-weight:600;margin-bottom:12px">My Portfolio</div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px">
+          <div style="display:flex;justify-content:center;margin-bottom:12px">
+            <div style="width:80px;height:80px;border-radius:50%;background:conic-gradient(var(--teal) 0% 40%,var(--blue) 40% 62%,var(--amber) 62% 80%,#CBD5E0 80% 100%)"></div>
+          </div>
+          <div class="legend" style="gap:5px">
+            <div class="legend-row"><div class="legend-dot" style="background:var(--teal)"></div><span style="flex:1;font-size:11px">US Equities</span><span style="font-size:11px;font-weight:600">40%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:var(--blue)"></div><span style="flex:1;font-size:11px">Intl. Equities</span><span style="font-size:11px;font-weight:600">22%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:var(--amber)"></div><span style="flex:1;font-size:11px">Real Assets</span><span style="font-size:11px;font-weight:600">18%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:#CBD5E0"></div><span style="flex:1;font-size:11px">Bonds / Cash</span><span style="font-size:11px;font-weight:600">20%</span></div>
+          </div>
+        </div>
+        <div class="m-card"><div class="m-card-icon">📊</div><div class="m-card-info"><div class="m-name">VTI · US Total Market</div><div class="m-sub">$124,992 · 40%</div></div><div class="m-card-val up">+1.8%</div></div>
+        <div class="m-card"><div class="m-card-icon">🌍</div><div class="m-card-info"><div class="m-name">VXUS · International</div><div class="m-sub">$68,745 · 22%</div></div><div class="m-card-val down">−0.6%</div></div>
+        <div class="m-card"><div class="m-card-icon">🏢</div><div class="m-card-info"><div class="m-name">VNQ · Real Estate</div><div class="m-sub">$56,246 · 18%</div></div><div class="m-card-val up">+0.9%</div></div>
+      </div>
+      <div class="mobile-nav">
+        <div class="m-nav-item"><span class="m-nav-icon">◼</span><div class="m-nav-label">Home</div></div>
+        <div class="m-nav-item active"><span class="m-nav-icon">◈</span><div class="m-nav-label" style="color:var(--teal)">Portfolio</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">◎</span><div class="m-nav-label">Goals</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">📊</span><div class="m-nav-label">Analytics</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">👤</span><div class="m-nav-label">Profile</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COLOR SYSTEM -->
+  <div>
+    <div class="screen-label">Design Tokens · Colour System</div>
+    <div class="screen w-420">
+      <div class="color-guide">
+        <div style="font-size:14px;font-weight:600;margin-bottom:16px">Nova Wealth — Colour Palette</div>
+        <div class="color-row" style="margin-bottom:20px">
+          <div class="swatch"><div class="swatch-block" style="background:#0AB68B"></div><div class="swatch-name">Teal</div><div class="swatch-hex">#0AB68B</div></div>
+          <div class="swatch"><div class="swatch-block" style="background:#078C6C"></div><div class="swatch-name">Teal Dark</div><div class="swatch-hex">#078C6C</div></div>
+          <div class="swatch"><div class="swatch-block" style="background:#E6F7F2;border:1px solid #ddd"></div><div class="swatch-name">Teal Light</div><div class="swatch-hex">#E6F7F2</div></div>
+          <div class="swatch"><div class="swatch-block" style="background:#0B1F3A"></div><div class="swatch-name">Navy</div><div class="swatch-hex">#0B1F3A</div></div>
+          <div class="swatch"><div class="swatch-block" style="background:#1A3354"></div><div class="swatch-name">Navy Mid</div><div class="swatch-hex">#1A3354</div></div>
+        </div>
+        <div class="color-row" style="margin-bottom:20px">
+          <div class="swatch"><div class="swatch-block" style="background:#4A6080"></div><div class="swatch-name">Slate</div><div class="swatch-hex">#4A6080</div></div>
+          <div class="swatch"><div class="swatch-block" style="background:#F0F4F8;border:1px solid #ddd"></div><div class="swatch-name">Mist</div><div class="swatch-hex">#F0F4F8</div></div>
+          <div class="swatch"><div class="swatch-block" style="background:#F59E0B"></div><div class="swatch-name">Amber</div><div class="swatch-hex">#F59E0B</div></div>
+          <div class="swatch"><div class="swatch-block" style="background:#EF4444"></div><div class="swatch-name">Red</div><div class="swatch-hex">#EF4444</div></div>
+          <div class="swatch"><div class="swatch-block" style="background:#3B82F6"></div><div class="swatch-name">Blue</div><div class="swatch-hex">#3B82F6</div></div>
+        </div>
+        <div class="divider"></div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">Typography</div>
+        <div style="margin-bottom:8px"><span style="font-family:'Instrument Serif',serif;font-size:22px">Instrument Serif</span> <span style="font-size:11px;color:var(--ink-faint)">— Display / headings</span></div>
+        <div style="margin-bottom:8px"><span style="font-family:'Sora',sans-serif;font-size:14px;font-weight:500">Sora</span> <span style="font-size:11px;color:var(--ink-faint)">— Body / UI text</span></div>
+        <div style="margin-bottom:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:13px">JetBrains Mono</span> <span style="font-size:11px;color:var(--ink-faint)">— Numbers / labels</span></div>
+        <div class="divider"></div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">Spacing &amp; Radius</div>
+        <div style="display:flex;gap:12px;align-items:flex-end">
+          <div style="text-align:center"><div style="width:20px;height:20px;background:var(--navy);border-radius:6px;margin:0 auto 4px"></div><div style="font-size:9px;color:var(--ink-faint)">r-sm 6px</div></div>
+          <div style="text-align:center"><div style="width:32px;height:32px;background:var(--navy);border-radius:12px;margin:0 auto 4px"></div><div style="font-size:9px;color:var(--ink-faint)">r 12px</div></div>
+          <div style="text-align:center"><div style="width:48px;height:48px;background:var(--navy);border-radius:20px;margin:0 auto 4px"></div><div style="font-size:9px;color:var(--ink-faint)">r-lg 20px</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="height:40px"></div>
+</body>
+</html>

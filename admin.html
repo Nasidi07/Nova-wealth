@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — Mobile App</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0AB68B;
+  --teal-dark: #078C6C;
+  --teal-light: #E6F7F2;
+  --navy: #0B1F3A;
+  --navy-mid: #1A3354;
+  --slate: #4A6080;
+  --mist: #F0F4F8;
+  --white: #FFFFFF;
+  --border: #DDE4ED;
+  --amber: #F59E0B;
+  --red: #EF4444;
+  --blue: #3B82F6;
+  --ink: #0B1F3A;
+  --ink-mid: #4A6080;
+  --ink-faint: #94A3B8;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r-sm: 6px;
+  --r: 12px;
+  --r-lg: 20px;
+  --sh-sm: 0 1px 4px rgba(11,31,58,.07);
+  --sh-lg: 0 12px 40px rgba(11,31,58,.15);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); color: var(--ink); background: #101C2E; font-size: 14px; min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+a { text-decoration: none; color: inherit; }
+.up { color: var(--teal); }
+.down { color: var(--red); }
+
+.top-bar {
+  width: 100%; background: #060F1C; padding: 16px 40px;
+  display: flex; align-items: center; gap: 16px;
+  border-bottom: 1px solid #1E2D42;
+}
+.top-bar .logo { font-family: var(--serif); font-size: 20px; color: var(--teal); }
+.top-bar .sep { color: #4A6080; }
+.top-bar .file { font-size: 12px; color: #4A6080; }
+.top-bar .back { margin-left: auto; font-size: 11px; color: #4A6080; font-family: var(--mono); }
+.top-bar .back:hover { color: var(--teal); }
+
+.phones { display: flex; gap: 40px; padding: 48px; flex-wrap: wrap; justify-content: center; }
+
+/* PHONE FRAME */
+.phone-wrap { text-align: center; }
+.phone-label { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: #4A6080; margin-bottom: 10px; }
+.phone {
+  width: 280px; background: var(--white); border-radius: 32px;
+  overflow: hidden; box-shadow: var(--sh-lg); border: 3px solid #1E2D42;
+  position: relative;
+}
+.phone-notch {
+  background: var(--navy); padding: 10px 20px 8px;
+  display: flex; justify-content: space-between;
+  font-family: var(--mono); font-size: 10px; color: #4A6080;
+}
+.phone-body { background: var(--mist); padding: 14px; min-height: 400px; }
+.phone-nav {
+  background: var(--white); border-top: 1px solid var(--border);
+  display: flex; padding: 8px 4px;
+}
+.m-nav-item { flex: 1; text-align: center; }
+.m-nav-icon { font-size: 17px; display: block; }
+.m-nav-label { font-size: 8px; color: var(--ink-faint); margin-top: 1px; }
+.m-nav-item.active .m-nav-label { color: var(--teal); }
+
+/* MOBILE COMPONENTS */
+.mobile-toprow { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.mobile-greeting .greet { font-size: 10px; color: var(--ink-faint); }
+.mobile-greeting .name { font-size: 14px; font-weight: 600; }
+.mobile-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--teal-dark); }
+
+.hero-card { background: var(--navy); border-radius: 14px; padding: 18px; margin-bottom: 12px; }
+.hero-card .mh-label { font-size: 10px; color: #4A6080; margin-bottom: 4px; }
+.hero-card .mh-amount { font-family: var(--serif); font-size: 28px; color: #fff; }
+.hero-card .mh-change { font-size: 11px; color: var(--teal); margin-top: 4px; }
+
+.mobile-actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 6px; margin-bottom: 12px; }
+.m-action { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 10px 4px; text-align: center; cursor: pointer; transition: border-color .15s; }
+.m-action:hover { border-color: var(--teal); }
+.m-action .m-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+.m-action .m-label { font-size: 9px; color: var(--ink-mid); font-weight: 500; }
+
+.section-title { font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+.m-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 11px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 6px; cursor: pointer; transition: border-color .15s; }
+.m-card:hover { border-color: var(--teal); }
+.m-card-icon { width: 28px; height: 28px; border-radius: 7px; background: var(--teal-light); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+.m-card-info .m-name { font-size: 11px; font-weight: 600; }
+.m-card-info .m-sub { font-size: 9px; color: var(--ink-faint); }
+.m-card-val { margin-left: auto; font-family: var(--mono); font-size: 11px; font-weight: 500; }
+
+/* PORTFOLIO SCREEN */
+.portfolio-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+.portfolio-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+.pie-center-mobile { display: flex; justify-content: center; margin-bottom: 12px; }
+.pie-mobile { width: 80px; height: 80px; border-radius: 50%; background: conic-gradient(var(--teal) 0% 40%, var(--blue) 40% 62%, var(--amber) 62% 80%, #CBD5E0 80% 100%); }
+.legend { display: flex; flex-direction: column; gap: 5px; }
+.legend-row { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="logo">Nova Wealth</div>
+  <div class="sep">—</div>
+  <div class="file">Mobile App Screens</div>
+  <a href="../index.html" class="back">← Overview</a>
+</div>
+
+<div class="phones">
+  <!-- MOBILE DASHBOARD -->
+  <div class="phone-wrap">
+    <div class="phone-label">M1 · Dashboard</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●● WiFi</span></div>
+      <div class="phone-body">
+        <div class="mobile-toprow">
+          <div class="mobile-greeting"><div class="greet">Good morning,</div><div class="name">Amara 👋</div></div>
+          <div class="mobile-avatar">AO</div>
+        </div>
+        <div class="hero-card">
+          <div class="mh-label">Total Portfolio</div>
+          <div class="mh-amount">$312,480</div>
+          <div class="mh-change">↑ +$5,840 this month (+1.9%)</div>
+        </div>
+        <div class="mobile-actions">
+          <div class="m-action"><span class="m-icon">＋</span><span class="m-label">Add</span></div>
+          <div class="m-action"><span class="m-icon">↗</span><span class="m-label">Invest</span></div>
+          <div class="m-action"><span class="m-icon">↙</span><span class="m-label">Withdraw</span></div>
+          <div class="m-action"><span class="m-icon">✦</span><span class="m-label">Advisor</span></div>
+        </div>
+        <div class="section-title">Goals</div>
+        <div class="m-card">
+          <div class="m-card-icon">🏠</div>
+          <div class="m-card-info"><div class="m-name">Buy a Home</div><div class="m-sub">72% · On Track</div></div>
+          <div class="m-card-val up">$100.8k</div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-icon">🎓</div>
+          <div class="m-card-info"><div class="m-name">Kids' Education</div><div class="m-sub">38% · On Track</div></div>
+          <div class="m-card-val up">$34.2k</div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-icon">✈️</div>
+          <div class="m-card-info"><div class="m-name">Sabbatical</div><div class="m-sub">18% · Behind</div></div>
+          <div class="m-card-val" style="color:var(--amber)">$4.5k</div>
+        </div>
+      </div>
+      <div class="phone-nav">
+        <div class="m-nav-item active"><span class="m-nav-icon">◼</span><div class="m-nav-label" style="color:var(--teal)">Home</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">◈</span><div class="m-nav-label">Portfolio</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">◎</span><div class="m-nav-label">Goals</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">📊</span><div class="m-nav-label">Analytics</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">👤</span><div class="m-nav-label">Profile</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOBILE PORTFOLIO -->
+  <div class="phone-wrap">
+    <div class="phone-label">M2 · Portfolio</div>
+    <div class="phone">
+      <div class="phone-notch"><span>9:41</span><span>●●● WiFi</span></div>
+      <div class="phone-body">
+        <div class="portfolio-title">My Portfolio</div>
+        <div class="portfolio-card">
+          <div class="pie-center-mobile">
+            <div class="pie-mobile"></div>
+          </div>
+          <div class="legend">
+            <div class="legend-row"><div class="legend-dot" style="background:var(--teal)"></div><span style="flex:1">US Equities</span><span style="font-weight:600">40%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:var(--blue)"></div><span style="flex:1">Intl. Equities</span><span style="font-weight:600">22%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:var(--amber)"></div><span style="flex:1">Real Assets</span><span style="font-weight:600">18%</span></div>
+            <div class="legend-row"><div class="legend-dot" style="background:#CBD5E0"></div><span style="flex:1">Bonds / Cash</span><span style="font-weight:600">20%</span></div>
+          </div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-icon">📊</div>
+          <div class="m-card-info"><div class="m-name">VTI · US Total Market</div><div class="m-sub">$124,992 · 40%</div></div>
+          <div class="m-card-val up">+1.8%</div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-icon">🌍</div>
+          <div class="m-card-info"><div class="m-name">VXUS · International</div><div class="m-sub">$68,745 · 22%</div></div>
+          <div class="m-card-val down">−0.6%</div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-icon">🏢</div>
+          <div class="m-card-info"><div class="m-name">VNQ · Real Estate</div><div class="m-sub">$56,246 · 18%</div></div>
+          <div class="m-card-val up">+0.9%</div>
+        </div>
+        <div class="m-card">
+          <div class="m-card-icon">🏦</div>
+          <div class="m-card-info"><div class="m-name">BND · US Bonds</div><div class="m-sub">$62,497 · 20%</div></div>
+          <div class="m-card-val up">+0.2%</div>
+        </div>
+      </div>
+      <div class="phone-nav">
+        <div class="m-nav-item"><span class="m-nav-icon">◼</span><div class="m-nav-label">Home</div></div>
+        <div class="m-nav-item active"><span class="m-nav-icon">◈</span><div class="m-nav-label" style="color:var(--teal)">Portfolio</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">◎</span><div class="m-nav-label">Goals</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">📊</span><div class="m-nav-label">Analytics</div></div>
+        <div class="m-nav-item"><span class="m-nav-icon">👤</span><div class="m-nav-label">Profile</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

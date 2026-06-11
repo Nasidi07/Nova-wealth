@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0AB68B;
+  --teal-dark: #078C6C;
+  --teal-light: #E6F7F2;
+  --navy: #0B1F3A;
+  --navy-mid: #1A3354;
+  --slate: #4A6080;
+  --mist: #F0F4F8;
+  --white: #FFFFFF;
+  --border: #DDE4ED;
+  --amber: #F59E0B;
+  --red: #EF4444;
+  --blue: #3B82F6;
+  --ink: #0B1F3A;
+  --ink-mid: #4A6080;
+  --ink-faint: #94A3B8;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r-sm: 6px;
+  --r: 12px;
+  --r-lg: 20px;
+  --sh-sm: 0 1px 4px rgba(11,31,58,.07);
+  --sh: 0 4px 20px rgba(11,31,58,.10);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); color: var(--ink); background: var(--mist); font-size: 14px; line-height: 1.5; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--sans); }
+.btn { display: inline-flex; align-items: center; gap: 6px; border: none; font-weight: 600; border-radius: var(--r-sm); transition: opacity .15s; }
+.btn:hover { opacity: .88; }
+.btn-primary { background: var(--teal); color: #fff; padding: 11px 22px; font-size: 13px; }
+.btn-ghost { background: transparent; color: var(--ink-mid); border: 1.5px solid var(--border); padding: 10px 18px; font-size: 13px; }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-teal { background: var(--teal-light); color: var(--teal-dark); }
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; box-shadow: var(--sh-sm); }
+.card-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-bottom: 6px; }
+.up { color: var(--teal); }
+.down { color: var(--red); }
+
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px; background: var(--navy); flex-shrink: 0;
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+}
+.sidebar-brand { font-family: var(--serif); font-size: 20px; color: var(--teal); padding: 22px 20px 28px; }
+.sidebar nav { flex: 1; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 20px;
+  font-size: 13px; font-weight: 500; color: #7A95B0;
+  border-left: 3px solid transparent; transition: all .15s;
+}
+.sidebar nav a:hover { color: #fff; background: rgba(255,255,255,.03); }
+.sidebar nav a.active { color: #fff; border-left-color: var(--teal); background: rgba(255,255,255,.06); }
+.sidebar nav .ico { font-size: 15px; width: 18px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.07); }
+.sidebar-user { display: flex; align-items: center; gap: 10px; }
+.sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+.sidebar-user-info .name { font-size: 12px; font-weight: 600; color: #fff; }
+.sidebar-user-info .role { font-size: 10px; color: #4A6080; }
+.back-link { display: block; padding: 10px 20px; font-size: 11px; color: #4A6080; font-family: var(--mono); border-top: 1px solid rgba(255,255,255,.05); margin-top: 8px; }
+.back-link:hover { color: var(--teal); }
+
+.main { flex: 1; padding: 24px; min-width: 0; }
+
+/* PIE CHART */
+.alloc-card { margin-bottom: 14px; }
+.alloc-row { display: flex; gap: 20px; align-items: center; }
+.pie-wrap { position: relative; width: 100px; height: 100px; flex-shrink: 0; }
+.pie {
+  width: 100px; height: 100px; border-radius: 50%;
+  background: conic-gradient(var(--teal) 0% 40%, var(--blue) 40% 62%, var(--amber) 62% 80%, #CBD5E0 80% 100%);
+}
+.pie-center {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 50px; height: 50px; border-radius: 50%; background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--serif); font-size: 14px; font-weight: 600;
+}
+.legend { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+/* RISK GAUGE */
+.gauge-track { height: 8px; border-radius: 20px; background: linear-gradient(90deg, #0AB68B 0%, #F59E0B 50%, #EF4444 100%); margin: 10px 0; position: relative; }
+.gauge-pin { position: absolute; top: -5px; width: 18px; height: 18px; background: #fff; border: 2.5px solid var(--navy); border-radius: 50%; transform: translateX(-50%); transition: left .5s ease; }
+
+/* TABLE */
+.tbl-wrap { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--sh-sm); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { padding: 10px 14px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); border-bottom: 1.5px solid var(--border); background: var(--white); }
+td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--ink-mid); }
+tr:last-child td { border-bottom: none; }
+td.strong { font-weight: 600; color: var(--ink); }
+tr:hover td { background: var(--mist); }
+tr.selected td { background: var(--teal-light); }
+
+/* REBALANCE MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(11,31,58,.5); z-index: 200;
+  display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--white); border-radius: var(--r-lg); padding: 28px; width: 480px; max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+.modal h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.modal .sub { font-size: 13px; color: var(--ink-mid); margin-bottom: 20px; }
+.modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+.modal .change-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.modal .change-row:last-child { border-bottom: none; }
+.modal .change-row .asset { flex: 1; font-weight: 600; }
+.modal .change-row .pct { font-family: var(--mono); width: 50px; text-align: right; }
+
+@media (max-width: 900px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">Nova Wealth</div>
+    <nav>
+      <a href="dashboard.html"><span class="ico">◼</span> Dashboard</a>
+      <a href="portfolio.html" class="active"><span class="ico">◈</span> Portfolio</a>
+      <a href="goals.html"><span class="ico">◎</span> Goals</a>
+      <a href="funding.html"><span class="ico">↕</span> Transactions</a>
+      <a href="funding.html"><span class="ico">💳</span> Funding</a>
+      <a href="analytics.html"><span class="ico">📊</span> Analytics</a>
+      <a href="statements.html"><span class="ico">📄</span> Statements</a>
+      <a href="notifications.html"><span class="ico">🔔</span> Notifications</a>
+      <a href="support.html"><span class="ico">💬</span> Support</a>
+      <a href="#"><span class="ico">⚙</span> Settings</a>
+    </nav>
+    <a href="../index.html" class="back-link">← Overview</a>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">AO</div>
+        <div class="sidebar-user-info">
+          <div class="name">Amara Osei</div>
+          <div class="role">Premium Investor</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div style="font-size:18px;font-weight:600">Investment Portfolio</div>
+      <button class="btn btn-primary btn-sm" onclick="openRebalance()">Rebalance now</button>
+    </div>
+
+    <!-- ALLOCATION -->
+    <div class="card alloc-card">
+      <div class="card-label">Asset Allocation</div>
+      <div class="alloc-row" style="margin-top:8px">
+        <div class="pie-wrap">
+          <div class="pie"></div>
+          <div class="pie-center">$312K</div>
+        </div>
+        <div class="legend">
+          <div class="legend-row"><div class="legend-dot" style="background:var(--teal)"></div><div style="flex:1">US Equities (VTI)</div><div style="font-weight:600">40%</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:var(--blue)"></div><div style="flex:1">Intl. Equities (VXUS)</div><div style="font-weight:600">22%</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:var(--amber)"></div><div style="flex:1">Real Assets (VNQ)</div><div style="font-weight:600">18%</div></div>
+          <div class="legend-row"><div class="legend-dot" style="background:#CBD5E0"></div><div style="flex:1">Bonds / Cash</div><div style="font-weight:600">20%</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RISK -->
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-label">Risk Level</div>
+      <div class="gauge-track"><div class="gauge-pin" id="risk-pin" style="left:60%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-faint)"><span>Conservative</span><span>Moderate</span><span>Aggressive</span></div>
+      <div style="margin-top:8px;font-size:12px;color:var(--ink-mid)">Your score: <strong style="color:var(--amber)">6.4 / 10 — Moderate Growth</strong></div>
+    </div>
+
+    <!-- HOLDINGS TABLE -->
+    <div class="tbl-wrap">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:13px;font-weight:600">Holdings</span>
+        <span style="font-size:11px;color:var(--ink-faint)">Last updated: Jun 11, 2026</span>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Asset</th><th>Value</th><th>Allocation</th><th>Day Change</th><th>Total Return</th></tr>
+        </thead>
+        <tbody>
+          <tr onclick="this.classList.toggle('selected')" style="cursor:pointer">
+            <td class="strong">VTI — US Total Market</td>
+            <td>$124,992</td>
+            <td>40%</td>
+            <td class="up">+1.8%</td>
+            <td class="up">+$22,400</td>
+          </tr>
+          <tr onclick="this.classList.toggle('selected')" style="cursor:pointer">
+            <td class="strong">VXUS — International</td>
+            <td>$68,745</td>
+            <td>22%</td>
+            <td class="down">−0.6%</td>
+            <td class="up">+$4,100</td>
+          </tr>
+          <tr onclick="this.classList.toggle('selected')" style="cursor:pointer">
+            <td class="strong">VNQ — Real Estate</td>
+            <td>$56,246</td>
+            <td>18%</td>
+            <td class="up">+0.9%</td>
+            <td class="up">+$6,820</td>
+          </tr>
+          <tr onclick="this.classList.toggle('selected')" style="cursor:pointer">
+            <td class="strong">BND — US Bonds</td>
+            <td>$62,497</td>
+            <td>20%</td>
+            <td class="up">+0.2%</td>
+            <td class="up">+$1,240</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- REBALANCE MODAL -->
+<div class="modal-overlay" id="rebalance-modal">
+  <div class="modal">
+    <h3>Rebalance Portfolio</h3>
+    <div class="sub">The following trades will bring your portfolio back to target allocation.</div>
+    <div class="change-row"><span class="asset">VTI — US Equities</span><span style="color:var(--red)">Sell</span><span class="pct">−2.1%</span></div>
+    <div class="change-row"><span class="asset">VXUS — Intl Equities</span><span style="color:var(--teal)">Buy</span><span class="pct">+1.4%</span></div>
+    <div class="change-row"><span class="asset">VNQ — Real Assets</span><span style="color:var(--teal)">Buy</span><span class="pct">+0.7%</span></div>
+    <div class="change-row"><span class="asset">BND — Bonds</span><span style="color:var(--teal)">Buy</span><span class="pct">+0.0%</span></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeRebalance()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="confirmRebalance()">Confirm rebalance</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openRebalance() { document.getElementById('rebalance-modal').classList.add('open'); }
+function closeRebalance() { document.getElementById('rebalance-modal').classList.remove('open'); }
+function confirmRebalance() {
+  closeRebalance();
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--teal);color:#fff;padding:14px 24px;border-radius:12px;font-size:13px;font-weight:600;z-index:300;box-shadow:0 8px 24px rgba(10,182,139,.3);';
+  toast.textContent = '✓ Portfolio rebalanced successfully';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+document.getElementById('rebalance-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeRebalance();
+});
+</script>
+</body>
+</html>

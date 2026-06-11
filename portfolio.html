@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — Financial Goals</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0AB68B;
+  --teal-dark: #078C6C;
+  --teal-light: #E6F7F2;
+  --navy: #0B1F3A;
+  --navy-mid: #1A3354;
+  --slate: #4A6080;
+  --mist: #F0F4F8;
+  --white: #FFFFFF;
+  --border: #DDE4ED;
+  --amber: #F59E0B;
+  --red: #EF4444;
+  --blue: #3B82F6;
+  --ink: #0B1F3A;
+  --ink-mid: #4A6080;
+  --ink-faint: #94A3B8;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r-sm: 6px;
+  --r: 12px;
+  --r-lg: 20px;
+  --sh-sm: 0 1px 4px rgba(11,31,58,.07);
+  --sh: 0 4px 20px rgba(11,31,58,.10);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); color: var(--ink); background: var(--mist); font-size: 14px; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--sans); }
+.btn { display: inline-flex; align-items: center; gap: 6px; border: none; font-weight: 600; border-radius: var(--r-sm); transition: opacity .15s; }
+.btn:hover { opacity: .88; }
+.btn-primary { background: var(--teal); color: #fff; padding: 11px 22px; font-size: 13px; }
+.btn-ghost { background: transparent; color: var(--ink-mid); border: 1.5px solid var(--border); padding: 10px 18px; font-size: 13px; }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-teal { background: var(--teal-light); color: var(--teal-dark); }
+.badge-amber { background: #FEF3C7; color: #B45309; }
+.badge-blue { background: #EFF6FF; color: #1D4ED8; }
+
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px; background: var(--navy); flex-shrink: 0;
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+}
+.sidebar-brand { font-family: var(--serif); font-size: 20px; color: var(--teal); padding: 22px 20px 28px; }
+.sidebar nav { flex: 1; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 20px;
+  font-size: 13px; font-weight: 500; color: #7A95B0;
+  border-left: 3px solid transparent; transition: all .15s;
+}
+.sidebar nav a:hover { color: #fff; background: rgba(255,255,255,.03); }
+.sidebar nav a.active { color: #fff; border-left-color: var(--teal); background: rgba(255,255,255,.06); }
+.sidebar nav .ico { font-size: 15px; width: 18px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.07); }
+.sidebar-user { display: flex; align-items: center; gap: 10px; }
+.sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+.sidebar-user-info .name { font-size: 12px; font-weight: 600; color: #fff; }
+.sidebar-user-info .role { font-size: 10px; color: #4A6080; }
+.back-link { display: block; padding: 10px 20px; font-size: 11px; color: #4A6080; font-family: var(--mono); border-top: 1px solid rgba(255,255,255,.05); margin-top: 8px; }
+.back-link:hover { color: var(--teal); }
+
+.main { flex: 1; padding: 24px; max-width: 640px; }
+
+.goal-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 18px; margin-bottom: 12px; box-shadow: var(--sh-sm);
+  transition: border-color .2s, transform .15s; cursor: pointer;
+}
+.goal-card:hover { border-color: var(--teal); transform: translateY(-1px); }
+.goal-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+.goal-name { font-size: 15px; font-weight: 600; }
+.goal-meta { font-size: 11px; color: var(--ink-mid); margin-top: 2px; }
+.progress-track { background: var(--border); border-radius: 20px; height: 8px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 20px; background: var(--teal); transition: width .8s ease; }
+.progress-fill.amber { background: var(--amber); }
+.goal-amounts { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-faint); margin-top: 8px; }
+.goal-detail { display: none; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.goal-card.expanded .goal-detail { display: block; }
+.goal-detail-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; }
+.goal-detail-row .label { color: var(--ink-mid); }
+.goal-detail-row .value { font-weight: 600; }
+
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(11,31,58,.5); z-index: 200;
+  display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--white); border-radius: var(--r-lg); padding: 28px; width: 440px; max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+.modal h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+.modal .sub { font-size: 13px; color: var(--ink-mid); margin-bottom: 20px; }
+.modal .input-wrap { margin-bottom: 14px; }
+.modal .input-wrap label { display: block; font-size: 11px; font-weight: 600; color: var(--ink-mid); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .03em; }
+.modal .input-wrap input, .modal .input-wrap select {
+  width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: var(--r-sm);
+  font-family: var(--sans); font-size: 13px; color: var(--ink); background: var(--mist);
+}
+.modal .input-wrap input:focus { outline: none; border-color: var(--teal); }
+.modal-actions { display: flex; gap: 10px; margin-top: 18px; }
+
+@media (max-width: 900px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">Nova Wealth</div>
+    <nav>
+      <a href="dashboard.html"><span class="ico">◼</span> Dashboard</a>
+      <a href="portfolio.html"><span class="ico">◈</span> Portfolio</a>
+      <a href="goals.html" class="active"><span class="ico">◎</span> Goals</a>
+      <a href="funding.html"><span class="ico">↕</span> Transactions</a>
+      <a href="funding.html"><span class="ico">💳</span> Funding</a>
+      <a href="analytics.html"><span class="ico">📊</span> Analytics</a>
+      <a href="statements.html"><span class="ico">📄</span> Statements</a>
+      <a href="notifications.html"><span class="ico">🔔</span> Notifications</a>
+      <a href="support.html"><span class="ico">💬</span> Support</a>
+      <a href="#"><span class="ico">⚙</span> Settings</a>
+    </nav>
+    <a href="../index.html" class="back-link">← Overview</a>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">AO</div>
+        <div class="sidebar-user-info">
+          <div class="name">Amara Osei</div>
+          <div class="role">Premium Investor</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+      <div>
+        <div style="font-size:18px;font-weight:600">Your Goals</div>
+        <div style="font-size:12px;color:var(--ink-mid);margin-top:2px">5 goals · 4 on track · 1 behind</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openGoalModal()">+ New Goal</button>
+    </div>
+
+    <div class="goal-card" onclick="this.classList.toggle('expanded')">
+      <div class="goal-head">
+        <div><div class="goal-name">🏠 Buy a Home</div><div class="goal-meta">Target $140,000 · Dec 2028</div></div>
+        <span class="badge badge-teal">On Track</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:72%"></div></div>
+      <div class="goal-amounts"><span>$100,800 saved</span><span>72%</span></div>
+      <div class="goal-detail">
+        <div class="goal-detail-row"><span class="label">Monthly contribution</span><span class="value">$1,200</span></div>
+        <div class="goal-detail-row"><span class="label">Projected completion</span><span class="value">Oct 2028</span></div>
+        <div class="goal-detail-row"><span class="label">Expected return</span><span class="value up">+8.2% avg</span></div>
+        <div class="goal-detail-row"><span class="label">Remaining</span><span class="value">$39,200</span></div>
+      </div>
+    </div>
+
+    <div class="goal-card" onclick="this.classList.toggle('expanded')">
+      <div class="goal-head">
+        <div><div class="goal-name">🎓 Kids' Education</div><div class="goal-meta">Target $90,000 · Aug 2032</div></div>
+        <span class="badge badge-teal">On Track</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:38%"></div></div>
+      <div class="goal-amounts"><span>$34,200 saved</span><span>38%</span></div>
+      <div class="goal-detail">
+        <div class="goal-detail-row"><span class="label">Monthly contribution</span><span class="value">$500</span></div>
+        <div class="goal-detail-row"><span class="label">Projected completion</span><span class="value">Jun 2032</span></div>
+        <div class="goal-detail-row"><span class="label">Expected return</span><span class="value up">+7.5% avg</span></div>
+        <div class="goal-detail-row"><span class="label">Remaining</span><span class="value">$55,800</span></div>
+      </div>
+    </div>
+
+    <div class="goal-card" onclick="this.classList.toggle('expanded')">
+      <div class="goal-head">
+        <div><div class="goal-name">✈️ Sabbatical</div><div class="goal-meta">Target $25,000 · Mar 2027</div></div>
+        <span class="badge badge-amber">Behind</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill amber" style="width:18%"></div></div>
+      <div class="goal-amounts"><span>$4,500 saved</span><span>18%</span></div>
+      <div class="goal-detail">
+        <div class="goal-detail-row"><span class="label">Monthly contribution</span><span class="value">$200</span></div>
+        <div class="goal-detail-row"><span class="label">Needs increase to</span><span class="value" style="color:var(--amber)">$400/mo</span></div>
+        <div class="goal-detail-row"><span class="label">Projected completion</span><span class="value" style="color:var(--amber)">Sep 2027</span></div>
+        <div class="goal-detail-row"><span class="label">Remaining</span><span class="value">$20,500</span></div>
+      </div>
+    </div>
+
+    <div class="goal-card" onclick="this.classList.toggle('expanded')">
+      <div class="goal-head">
+        <div><div class="goal-name">🌴 Retirement</div><div class="goal-meta">Target $1.5M · 2052</div></div>
+        <span class="badge badge-blue">Long-term</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:11%"></div></div>
+      <div class="goal-amounts"><span>$165,000 saved</span><span>11%</span></div>
+      <div class="goal-detail">
+        <div class="goal-detail-row"><span class="label">Monthly contribution</span><span class="value">$2,000</span></div>
+        <div class="goal-detail-row"><span class="label">Projected completion</span><span class="value">2051</span></div>
+        <div class="goal-detail-row"><span class="label">Expected return</span><span class="value up">+9.1% avg</span></div>
+        <div class="goal-detail-row"><span class="label">Remaining</span><span class="value">$1,335,000</span></div>
+      </div>
+    </div>
+
+    <div class="goal-card" onclick="this.classList.toggle('expanded')">
+      <div class="goal-head">
+        <div><div class="goal-name">🚗 New Car</div><div class="goal-meta">Target $38,000 · Jun 2027</div></div>
+        <span class="badge badge-teal">On Track</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:54%"></div></div>
+      <div class="goal-amounts"><span>$20,520 saved</span><span>54%</span></div>
+      <div class="goal-detail">
+        <div class="goal-detail-row"><span class="label">Monthly contribution</span><span class="value">$600</span></div>
+        <div class="goal-detail-row"><span class="label">Projected completion</span><span class="value">Apr 2027</span></div>
+        <div class="goal-detail-row"><span class="label">Expected return</span><span class="value up">+6.8% avg</span></div>
+        <div class="goal-detail-row"><span class="label">Remaining</span><span class="value">$17,480</span></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="goal-modal">
+  <div class="modal">
+    <h3>Create New Goal</h3>
+    <div class="sub">Set a target and we'll help you get there.</div>
+    <div class="input-wrap"><label>Goal name</label><input type="text" placeholder="e.g. Emergency Fund"></div>
+    <div class="input-wrap"><label>Target amount</label><input type="text" placeholder="$25,000"></div>
+    <div class="input-wrap"><label>Target date</label><input type="date"></div>
+    <div class="input-wrap"><label>Monthly contribution</label><input type="text" placeholder="$500"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" style="flex:1;justify-content:center" onclick="closeGoalModal()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1;justify-content:center" onclick="createGoal()">Create goal</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openGoalModal() { document.getElementById('goal-modal').classList.add('open'); }
+function closeGoalModal() { document.getElementById('goal-modal').classList.remove('open'); }
+function createGoal() {
+  closeGoalModal();
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--teal);color:#fff;padding:14px 24px;border-radius:12px;font-size:13px;font-weight:600;z-index:300;box-shadow:0 8px 24px rgba(10,182,139,.3);';
+  toast.textContent = '✓ Goal created successfully';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+document.getElementById('goal-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeGoalModal();
+});
+</script>
+</body>
+</html>

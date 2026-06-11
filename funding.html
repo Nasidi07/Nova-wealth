@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0AB68B;
+  --teal-dark: #078C6C;
+  --teal-light: #E6F7F2;
+  --navy: #0B1F3A;
+  --navy-mid: #1A3354;
+  --slate: #4A6080;
+  --mist: #F0F4F8;
+  --white: #FFFFFF;
+  --border: #DDE4ED;
+  --amber: #F59E0B;
+  --red: #EF4444;
+  --blue: #3B82F6;
+  --ink: #0B1F3A;
+  --ink-mid: #4A6080;
+  --ink-faint: #94A3B8;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r-sm: 6px;
+  --r: 12px;
+  --r-lg: 20px;
+  --sh-sm: 0 1px 4px rgba(11,31,58,.07);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); color: var(--ink); background: var(--mist); font-size: 14px; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--sans); }
+.btn { display: inline-flex; align-items: center; gap: 6px; border: none; font-weight: 600; border-radius: var(--r-sm); transition: opacity .15s; }
+.btn:hover { opacity: .88; }
+.btn-primary { background: var(--teal); color: #fff; padding: 11px 22px; font-size: 13px; }
+.btn-ghost { background: transparent; color: var(--ink-mid); border: 1.5px solid var(--border); padding: 10px 18px; font-size: 13px; }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; cursor: pointer; transition: all .15s; }
+.badge-teal { background: var(--teal-light); color: var(--teal-dark); }
+.badge-navy { background: #E8EDF4; color: var(--navy); }
+.badge.active { box-shadow: 0 0 0 2px var(--teal); }
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; box-shadow: var(--sh-sm); }
+.card-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-bottom: 6px; }
+.up { color: var(--teal); }
+.down { color: var(--red); }
+
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px; background: var(--navy); flex-shrink: 0;
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+}
+.sidebar-brand { font-family: var(--serif); font-size: 20px; color: var(--teal); padding: 22px 20px 28px; }
+.sidebar nav { flex: 1; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 20px;
+  font-size: 13px; font-weight: 500; color: #7A95B0;
+  border-left: 3px solid transparent; transition: all .15s;
+}
+.sidebar nav a:hover { color: #fff; background: rgba(255,255,255,.03); }
+.sidebar nav a.active { color: #fff; border-left-color: var(--teal); background: rgba(255,255,255,.06); }
+.sidebar nav .ico { font-size: 15px; width: 18px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.07); }
+.sidebar-user { display: flex; align-items: center; gap: 10px; }
+.sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+.sidebar-user-info .name { font-size: 12px; font-weight: 600; color: #fff; }
+.sidebar-user-info .role { font-size: 10px; color: #4A6080; }
+.back-link { display: block; padding: 10px 20px; font-size: 11px; color: #4A6080; font-family: var(--mono); border-top: 1px solid rgba(255,255,255,.05); margin-top: 8px; }
+.back-link:hover { color: var(--teal); }
+
+.main { flex: 1; padding: 24px; }
+
+.analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+.bar-chart { display: flex; align-items: flex-end; gap: 6px; height: 100px; padding: 0 4px; }
+.bar { flex: 1; border-radius: 4px 4px 0 0; background: var(--teal); opacity: .75; min-width: 8px; transition: opacity .15s, height .5s; cursor: pointer; }
+.bar:hover { opacity: 1; }
+.bar.hi { opacity: 1; }
+.bar-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--ink-faint); margin-top: 6px; padding: 0 4px; }
+
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { padding: 10px 14px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); border-bottom: 1.5px solid var(--border); }
+td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--ink-mid); }
+tr:last-child td { border-bottom: none; }
+td.strong { font-weight: 600; color: var(--ink); }
+tr:hover td { background: var(--mist); }
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .analytics-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">Nova Wealth</div>
+    <nav>
+      <a href="dashboard.html"><span class="ico">◼</span> Dashboard</a>
+      <a href="portfolio.html"><span class="ico">◈</span> Portfolio</a>
+      <a href="goals.html"><span class="ico">◎</span> Goals</a>
+      <a href="funding.html"><span class="ico">↕</span> Transactions</a>
+      <a href="funding.html"><span class="ico">💳</span> Funding</a>
+      <a href="analytics.html" class="active"><span class="ico">📊</span> Analytics</a>
+      <a href="statements.html"><span class="ico">📄</span> Statements</a>
+      <a href="notifications.html"><span class="ico">🔔</span> Notifications</a>
+      <a href="support.html"><span class="ico">💬</span> Support</a>
+      <a href="#"><span class="ico">⚙</span> Settings</a>
+    </nav>
+    <a href="../index.html" class="back-link">← Overview</a>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">AO</div>
+        <div class="sidebar-user-info">
+          <div class="name">Amara Osei</div>
+          <div class="role">Premium Investor</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:18px;font-weight:600">Analytics</div>
+      <button class="btn btn-ghost btn-sm" onclick="exportReport()">↓ Export</button>
+    </div>
+
+    <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap" id="period-tabs">
+      <span class="badge badge-teal active" data-period="ytd">YTD</span>
+      <span class="badge badge-navy" data-period="q2">Q2 2026</span>
+      <span class="badge badge-navy" data-period="2025">2025</span>
+      <span class="badge badge-navy" data-period="custom">Custom</span>
+    </div>
+
+    <div class="analytics-grid">
+      <div class="card">
+        <div class="card-label">Total Return</div>
+        <div style="font-family:var(--serif);font-size:24px;color:var(--teal)">+$42,600</div>
+        <div style="font-size:11px;color:var(--ink-faint)">Since inception · Nov 2022</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Tax Saved</div>
+        <div style="font-family:var(--serif);font-size:24px">$6,240</div>
+        <div style="font-size:11px;color:var(--ink-faint)">via Tax-Loss Harvesting</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px">Monthly performance</div>
+      <div class="bar-chart" id="bar-chart">
+        <div class="bar" style="height:38%" title="Jan: +2.1%"></div>
+        <div class="bar" style="height:55%" title="Feb: +3.2%"></div>
+        <div class="bar" style="height:42%" title="Mar: +2.4%"></div>
+        <div class="bar" style="height:70%" title="Apr: +4.1%"></div>
+        <div class="bar" style="height:48%" title="May: +2.8%"></div>
+        <div class="bar hi" style="height:82%" title="Jun: +4.8%"></div>
+        <div class="bar" style="height:65%" title="Jul: +3.8%"></div>
+        <div class="bar" style="height:90%" title="Aug: +5.2%"></div>
+        <div class="bar" style="height:72%" title="Sep: +4.2%"></div>
+        <div class="bar hi" style="height:95%" title="Oct: +5.6%"></div>
+        <div class="bar" style="height:78%" title="Nov: +4.5%"></div>
+        <div class="bar hi" style="height:100%" title="Dec: +5.8%"></div>
+      </div>
+      <div class="bar-labels">
+        <span>Jan</span><span>Feb</span><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span>
+        <span>Jul</span><span>Aug</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Dec</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr><th>Period</th><th>Return</th><th>Benchmark</th><th>Alpha</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Q2 2026</td><td class="up strong">+4.8%</td><td>+3.4%</td><td class="up">+1.4%</td></tr>
+          <tr><td>Q1 2026</td><td class="up strong">+7.2%</td><td>+5.6%</td><td class="up">+1.6%</td></tr>
+          <tr><td>2025 Full Year</td><td class="up strong">+12.6%</td><td>+9.4%</td><td class="up">+3.2%</td></tr>
+          <tr><td>2024 Full Year</td><td class="up strong">+10.8%</td><td>+8.2%</td><td class="up">+2.6%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script>
+// Period tab switching
+document.getElementById('period-tabs').addEventListener('click', function(e) {
+  const tab = e.target.closest('.badge');
+  if (!tab) return;
+  this.querySelectorAll('.badge').forEach(b => { b.classList.remove('active', 'badge-teal'); b.classList.add('badge-navy'); });
+  tab.classList.add('active', 'badge-teal');
+  tab.classList.remove('badge-navy');
+  // Animate bars
+  document.querySelectorAll('.bar').forEach(bar => {
+    const h = Math.random() * 60 + 30;
+    bar.style.height = h + '%';
+  });
+});
+
+// Bar hover tooltip
+document.querySelectorAll('.bar').forEach(bar => {
+  bar.addEventListener('mouseenter', function() {
+    this.style.opacity = '1';
+    this.style.transform = 'scaleY(1.05)';
+  });
+  bar.addEventListener('mouseleave', function() {
+    this.style.opacity = this.classList.contains('hi') ? '1' : '0.75';
+    this.style.transform = 'scaleY(1)';
+  });
+});
+
+function exportReport() {
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--teal);color:#fff;padding:14px 24px;border-radius:12px;font-size:13px;font-weight:600;z-index:300;box-shadow:0 8px 24px rgba(10,182,139,.3);';
+  toast.textContent = '✓ Analytics report exported';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+</script>
+</body>
+</html>

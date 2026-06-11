@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — Admin Console</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0AB68B;
+  --teal-dark: #078C6C;
+  --teal-light: #E6F7F2;
+  --navy: #0B1F3A;
+  --navy-mid: #1A3354;
+  --slate: #4A6080;
+  --mist: #F0F4F8;
+  --white: #FFFFFF;
+  --border: #DDE4ED;
+  --amber: #F59E0B;
+  --red: #EF4444;
+  --blue: #3B82F6;
+  --ink: #0B1F3A;
+  --ink-mid: #4A6080;
+  --ink-faint: #94A3B8;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r-sm: 6px;
+  --r: 12px;
+  --r-lg: 20px;
+  --sh-sm: 0 1px 4px rgba(11,31,58,.07);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); color: var(--ink); background: var(--mist); font-size: 14px; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--sans); }
+.btn { display: inline-flex; align-items: center; gap: 6px; border: none; font-weight: 600; border-radius: var(--r-sm); transition: opacity .15s; }
+.btn:hover { opacity: .88; }
+.btn-ghost { background: transparent; color: var(--ink-mid); border: 1.5px solid var(--border); padding: 10px 18px; font-size: 13px; }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-teal { background: var(--teal-light); color: var(--teal-dark); }
+.badge-amber { background: #FEF3C7; color: #B45309; }
+.badge-red { background: #FEE2E2; color: #B91C1C; }
+.badge-navy { background: #E8EDF4; color: var(--navy); }
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; box-shadow: var(--sh-sm); }
+.card-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint); margin-bottom: 6px; }
+
+.layout { display: flex; min-height: 100vh; }
+.admin-sidebar {
+  width: 220px; background: #060F1C; flex-shrink: 0;
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+}
+.admin-sidebar .brand { font-family: var(--serif); font-size: 20px; color: var(--teal); padding: 22px 20px 28px; }
+.admin-sidebar nav { flex: 1; }
+.admin-sidebar nav a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 20px;
+  font-size: 13px; font-weight: 500; color: #4A6080;
+  border-left: 3px solid transparent; transition: all .15s;
+}
+.admin-sidebar nav a:hover { color: #fff; background: rgba(255,255,255,.03); }
+.admin-sidebar nav a.active { color: #fff; border-left-color: var(--teal); background: rgba(255,255,255,.04); }
+.admin-sidebar nav .ico { font-size: 15px; width: 18px; text-align: center; }
+.admin-sidebar .back-link { display: block; padding: 10px 20px; font-size: 11px; color: #4A6080; font-family: var(--mono); border-top: 1px solid rgba(255,255,255,.05); margin-top: 8px; }
+.admin-sidebar .back-link:hover { color: var(--teal); }
+
+.main { flex: 1; padding: 24px; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 18px; }
+
+.alert-card { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-radius: var(--r-sm); margin-bottom: 8px; transition: transform .15s; }
+.alert-card:hover { transform: translateX(2px); }
+.alert-card.danger { background: #FEE2E2; }
+.alert-card.warn { background: #FEF3C7; }
+.alert-card.info { background: #EFF6FF; }
+.alert-icon { font-size: 18px; flex-shrink: 0; }
+.alert-text { flex: 1; }
+.alert-text .at-title { font-size: 13px; font-weight: 600; margin-bottom: 1px; }
+.alert-text .at-desc { font-size: 11px; color: var(--ink-mid); }
+
+.tbl-wrap { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); box-shadow: var(--sh-sm); overflow: hidden; margin-top: 18px; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { padding: 10px 14px; text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); border-bottom: 1.5px solid var(--border); }
+td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--ink-mid); }
+tr:last-child td { border-bottom: none; }
+td.strong { font-weight: 600; color: var(--ink); }
+tr:hover td { background: var(--mist); }
+
+@media (max-width: 900px) {
+  .admin-sidebar { display: none; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="admin-sidebar">
+    <div class="brand">Nova Admin</div>
+    <nav>
+      <a href="admin.html" class="active"><span class="ico">◼</span> Overview</a>
+      <a href="#"><span class="ico">👥</span> Users</a>
+      <a href="#"><span class="ico">⚠</span> Risk Alerts</a>
+      <a href="#"><span class="ico">📋</span> Compliance</a>
+      <a href="#"><span class="ico">📊</span> Reports</a>
+      <a href="#"><span class="ico">⚙</span> Settings</a>
+    </nav>
+    <a href="../index.html" class="back-link">← Overview</a>
+  </aside>
+
+  <main class="main">
+    <div style="font-size:18px;font-weight:600;margin-bottom:16px">Admin Overview</div>
+
+    <div class="kpi-grid">
+      <div class="card">
+        <div class="card-label">Total Users</div>
+        <div style="font-family:var(--serif);font-size:24px">98,241</div>
+        <div style="font-size:11px;color:var(--teal)">+1,482 this week</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Assets Under Mgmt</div>
+        <div style="font-family:var(--serif);font-size:24px">$6.2B</div>
+        <div style="font-size:11px;color:var(--teal)">↑ +1.6% MTD</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Pending KYC</div>
+        <div style="font-family:var(--serif);font-size:24px;color:var(--amber)">84</div>
+        <div style="font-size:11px;color:var(--amber)">Awaiting review</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Open Alerts</div>
+        <div style="font-family:var(--serif);font-size:24px;color:var(--red)">9</div>
+        <div style="font-size:11px;color:var(--red)">3 critical</div>
+      </div>
+    </div>
+
+    <div style="font-size:14px;font-weight:600;margin-bottom:10px">Risk & Compliance Alerts</div>
+    <div class="alert-card danger">
+      <span class="alert-icon">🔴</span>
+      <div class="alert-text">
+        <div class="at-title">Suspicious login — User #481920</div>
+        <div class="at-desc">3 failed MFA attempts from unrecognised device in Lagos. Account locked.</div>
+      </div>
+      <button class="btn btn-ghost btn-sm">Review</button>
+    </div>
+    <div class="alert-card danger">
+      <span class="alert-icon">🔴</span>
+      <div class="alert-text">
+        <div class="at-title">Large withdrawal flagged — $48,000</div>
+        <div class="at-desc">User #209401 — above $25,000 AML threshold. Manual review required.</div>
+      </div>
+      <button class="btn btn-ghost btn-sm">Review</button>
+    </div>
+    <div class="alert-card warn">
+      <span class="alert-icon">🟡</span>
+      <div class="alert-text">
+        <div class="at-title">Concentration risk — 6 accounts</div>
+        <div class="at-desc">Over 85% in single equity class. System has auto-notified affected users.</div>
+      </div>
+      <button class="btn btn-ghost btn-sm">Review</button>
+    </div>
+    <div class="alert-card info">
+      <span class="alert-icon">🔵</span>
+      <div class="alert-text">
+        <div class="at-title">84 KYC documents awaiting review</div>
+        <div class="at-desc">Average wait time: 18 hours. SLA breach risk in 6 hours.</div>
+      </div>
+      <button class="btn btn-ghost btn-sm">Review</button>
+    </div>
+
+    <div class="tbl-wrap">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:14px;font-weight:600">User Management</span>
+        <button class="btn btn-ghost btn-sm">Export CSV</button>
+      </div>
+      <table>
+        <thead>
+          <tr><th>User</th><th>Tier</th><th>AUM</th><th>KYC</th><th>Status</th><th>Joined</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="strong">Amara Osei</div><div style="font-size:10px;color:var(--ink-faint)">amara@example.com</div></td>
+            <td><span class="badge badge-teal">Premium</span></td>
+            <td class="strong">$312,480</td>
+            <td><span class="badge badge-teal">Verified</span></td>
+            <td><span class="badge badge-teal">Active</span></td>
+            <td style="font-size:11px">Nov 2022</td>
+            <td><button class="btn btn-ghost btn-sm">View</button></td>
+          </tr>
+          <tr>
+            <td><div class="strong">Emeka Nwosu</div><div style="font-size:10px;color:var(--ink-faint)">emeka@example.com</div></td>
+            <td><span class="badge badge-navy">Retail</span></td>
+            <td class="strong">$58,200</td>
+            <td><span class="badge badge-teal">Verified</span></td>
+            <td><span class="badge badge-teal">Active</span></td>
+            <td style="font-size:11px">Mar 2024</td>
+            <td><button class="btn btn-ghost btn-sm">View</button></td>
+          </tr>
+          <tr>
+            <td><div class="strong">Aisha Bello</div><div style="font-size:10px;color:var(--ink-faint)">aisha@example.com</div></td>
+            <td><span class="badge badge-teal">Premium</span></td>
+            <td class="strong">$648,900</td>
+            <td><span class="badge badge-amber">Pending</span></td>
+            <td><span class="badge badge-amber">Review</span></td>
+            <td style="font-size:11px">Jan 2023</td>
+            <td><button class="btn btn-ghost btn-sm">View</button></td>
+          </tr>
+          <tr>
+            <td><div class="strong">Tunde Alabi</div><div style="font-size:10px;color:var(--ink-faint)">tunde@example.com</div></td>
+            <td><span class="badge badge-navy">Retail</span></td>
+            <td class="strong">$22,100</td>
+            <td><span class="badge badge-teal">Verified</span></td>
+            <td><span class="badge badge-red">Locked</span></td>
+            <td style="font-size:11px">Aug 2024</td>
+            <td><button class="btn btn-ghost btn-sm">View</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

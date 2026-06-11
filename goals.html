@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — Funding & Transfers</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0AB68B;
+  --teal-dark: #078C6C;
+  --teal-light: #E6F7F2;
+  --navy: #0B1F3A;
+  --navy-mid: #1A3354;
+  --slate: #4A6080;
+  --mist: #F0F4F8;
+  --white: #FFFFFF;
+  --border: #DDE4ED;
+  --amber: #F59E0B;
+  --ink: #0B1F3A;
+  --ink-mid: #4A6080;
+  --ink-faint: #94A3B8;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r-sm: 6px;
+  --r: 12px;
+  --r-lg: 20px;
+  --sh-sm: 0 1px 4px rgba(11,31,58,.07);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); color: var(--ink); background: var(--mist); font-size: 14px; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--sans); }
+.btn { display: inline-flex; align-items: center; gap: 6px; border: none; font-weight: 600; border-radius: var(--r-sm); transition: opacity .15s; }
+.btn:hover { opacity: .88; }
+.btn-primary { background: var(--teal); color: #fff; padding: 11px 22px; font-size: 13px; }
+.btn-ghost { background: transparent; color: var(--ink-mid); border: 1.5px solid var(--border); padding: 10px 18px; font-size: 13px; }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.card { background: var(--white); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; box-shadow: var(--sh-sm); }
+
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px; background: var(--navy); flex-shrink: 0;
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+}
+.sidebar-brand { font-family: var(--serif); font-size: 20px; color: var(--teal); padding: 22px 20px 28px; }
+.sidebar nav { flex: 1; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 20px;
+  font-size: 13px; font-weight: 500; color: #7A95B0;
+  border-left: 3px solid transparent; transition: all .15s;
+}
+.sidebar nav a:hover { color: #fff; background: rgba(255,255,255,.03); }
+.sidebar nav a.active { color: #fff; border-left-color: var(--teal); background: rgba(255,255,255,.06); }
+.sidebar nav .ico { font-size: 15px; width: 18px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.07); }
+.sidebar-user { display: flex; align-items: center; gap: 10px; }
+.sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+.sidebar-user-info .name { font-size: 12px; font-weight: 600; color: #fff; }
+.sidebar-user-info .role { font-size: 10px; color: #4A6080; }
+.back-link { display: block; padding: 10px 20px; font-size: 11px; color: #4A6080; font-family: var(--mono); border-top: 1px solid rgba(255,255,255,.05); margin-top: 8px; }
+.back-link:hover { color: var(--teal); }
+
+.main { flex: 1; padding: 24px; max-width: 520px; }
+
+.input-wrap { margin-bottom: 14px; }
+.input-wrap label { display: block; font-size: 11px; font-weight: 600; color: var(--ink-mid); margin-bottom: 5px; letter-spacing: .03em; text-transform: uppercase; }
+.input-wrap input, .input-wrap select {
+  width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: var(--r-sm);
+  font-family: var(--sans); font-size: 13px; color: var(--ink); background: var(--mist);
+  transition: border-color .15s;
+}
+.input-wrap input:focus, .input-wrap select:focus { outline: none; border-color: var(--teal); }
+
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+.account-card {
+  background: var(--white); border: 1px solid var(--border); border-radius: var(--r);
+  padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px;
+  cursor: pointer; transition: all .15s;
+}
+.account-card:hover { border-color: var(--teal); }
+.account-card.selected { border-color: var(--teal); background: var(--teal-light); }
+.account-bank { width: 36px; height: 36px; background: var(--navy); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.account-info .bank-name { font-size: 13px; font-weight: 600; }
+.account-info .acct-num { font-size: 11px; color: var(--ink-faint); }
+.account-bal { margin-left: auto; font-family: var(--mono); font-size: 13px; font-weight: 500; }
+.account-check { color: var(--teal); font-size: 16px; margin-left: 8px; }
+.account-add { border-style: dashed; cursor: pointer; justify-content: center; gap: 6px; color: var(--teal); }
+.account-add:hover { background: var(--teal-light); }
+
+.tip-card { background: var(--teal-light); border: 1px solid var(--teal); border-radius: var(--r); padding: 14px 16px; margin-bottom: 14px; }
+.tip-card .tip { font-size: 12px; color: var(--teal-dark); }
+
+@media (max-width: 900px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">Nova Wealth</div>
+    <nav>
+      <a href="dashboard.html"><span class="ico">◼</span> Dashboard</a>
+      <a href="portfolio.html"><span class="ico">◈</span> Portfolio</a>
+      <a href="goals.html"><span class="ico">◎</span> Goals</a>
+      <a href="funding.html" class="active"><span class="ico">↕</span> Transactions</a>
+      <a href="funding.html" class="active"><span class="ico">💳</span> Funding</a>
+      <a href="analytics.html"><span class="ico">📊</span> Analytics</a>
+      <a href="statements.html"><span class="ico">📄</span> Statements</a>
+      <a href="notifications.html"><span class="ico">🔔</span> Notifications</a>
+      <a href="support.html"><span class="ico">💬</span> Support</a>
+      <a href="#"><span class="ico">⚙</span> Settings</a>
+    </nav>
+    <a href="../index.html" class="back-link">← Overview</a>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">AO</div>
+        <div class="sidebar-user-info">
+          <div class="name">Amara Osei</div>
+          <div class="role">Premium Investor</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div style="font-size:18px;font-weight:600;margin-bottom:16px">Add Funds</div>
+
+    <div style="font-size:12px;font-weight:600;color:var(--ink-mid);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">From account</div>
+    <div class="account-card selected" onclick="selectAccount(this)">
+      <div class="account-bank">GT</div>
+      <div class="account-info"><div class="bank-name">GTBank</div><div class="acct-num">••••  ••••  4821</div></div>
+      <div class="account-bal" style="color:var(--teal)">$12,450</div>
+      <span class="account-check">✓</span>
+    </div>
+    <div class="account-card" onclick="selectAccount(this)">
+      <div class="account-bank">ZT</div>
+      <div class="account-info"><div class="bank-name">Zenith Bank</div><div class="acct-num">••••  ••••  2290</div></div>
+      <div class="account-bal">$4,100</div>
+      <span class="account-check" style="opacity:0">✓</span>
+    </div>
+    <div class="account-card account-add">
+      <span style="font-size:18px">＋</span> Link a new account
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="input-wrap">
+      <label>Amount to deposit</label>
+      <input type="text" value="$5,000.00" id="deposit-amount">
+    </div>
+    <div class="input-wrap">
+      <label>Destination</label>
+      <select id="deposit-dest">
+        <option>Investment Portfolio (default)</option>
+        <option>Home Goal</option>
+        <option>Cash Account</option>
+      </select>
+    </div>
+    <div class="input-wrap">
+      <label>Frequency</label>
+      <select id="deposit-freq">
+        <option>One-time deposit</option>
+        <option>Weekly</option>
+        <option>Monthly</option>
+      </select>
+    </div>
+
+    <div class="tip-card">
+      <div class="tip">💡 <strong>Tip:</strong> Switching to monthly auto-deposits could grow your portfolio by an extra <strong>$14,200</strong> over 3 years.</div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px" onclick="confirmDeposit()">Confirm deposit →</button>
+  </main>
+</div>
+
+<script>
+function selectAccount(card) {
+  document.querySelectorAll('.account-card').forEach(c => {
+    c.classList.remove('selected');
+    const check = c.querySelector('.account-check');
+    if (check) check.style.opacity = '0';
+  });
+  card.classList.add('selected');
+  const check = card.querySelector('.account-check');
+  if (check) check.style.opacity = '1';
+}
+
+function confirmDeposit() {
+  const amt = document.getElementById('deposit-amount').value;
+  const dest = document.getElementById('deposit-dest').value;
+  const freq = document.getElementById('deposit-freq').value;
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--teal);color:#fff;padding:14px 24px;border-radius:12px;font-size:13px;font-weight:600;z-index:300;box-shadow:0 8px 24px rgba(10,182,139,.3);';
+  toast.textContent = '✓ ' + amt + ' deposit to ' + dest + ' (' + freq + ')';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+</script>
+</body>
+</html>

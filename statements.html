@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — Customer Support</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0AB68B;
+  --teal-dark: #078C6C;
+  --teal-light: #E6F7F2;
+  --navy: #0B1F3A;
+  --navy-mid: #1A3354;
+  --slate: #4A6080;
+  --mist: #F0F4F8;
+  --white: #FFFFFF;
+  --border: #DDE4ED;
+  --amber: #F59E0B;
+  --red: #EF4444;
+  --ink: #0B1F3A;
+  --ink-mid: #4A6080;
+  --ink-faint: #94A3B8;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r-sm: 6px;
+  --r: 12px;
+  --r-lg: 20px;
+  --sh-sm: 0 1px 4px rgba(11,31,58,.07);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); color: var(--ink); background: var(--mist); font-size: 14px; }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--sans); }
+.btn { display: inline-flex; align-items: center; gap: 6px; border: none; font-weight: 600; border-radius: var(--r-sm); transition: opacity .15s; }
+.btn:hover { opacity: .88; }
+.btn-primary { background: var(--teal); color: #fff; padding: 11px 22px; font-size: 13px; }
+.btn-ghost { background: transparent; color: var(--ink-mid); border: 1.5px solid var(--border); padding: 10px 18px; font-size: 13px; }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.badge-teal { background: var(--teal-light); color: var(--teal-dark); }
+.badge-amber { background: #FEF3C7; color: #B45309; }
+
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px; background: var(--navy); flex-shrink: 0;
+  display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
+}
+.sidebar-brand { font-family: var(--serif); font-size: 20px; color: var(--teal); padding: 22px 20px 28px; }
+.sidebar nav { flex: 1; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 10px; padding: 11px 20px;
+  font-size: 13px; font-weight: 500; color: #7A95B0;
+  border-left: 3px solid transparent; transition: all .15s;
+}
+.sidebar nav a:hover { color: #fff; background: rgba(255,255,255,.03); }
+.sidebar nav a.active { color: #fff; border-left-color: var(--teal); background: rgba(255,255,255,.06); }
+.sidebar nav .ico { font-size: 15px; width: 18px; text-align: center; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,.07); }
+.sidebar-user { display: flex; align-items: center; gap: 10px; }
+.sidebar-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; }
+.sidebar-user-info .name { font-size: 12px; font-weight: 600; color: #fff; }
+.sidebar-user-info .role { font-size: 10px; color: #4A6080; }
+.back-link { display: block; padding: 10px 20px; font-size: 11px; color: #4A6080; font-family: var(--mono); border-top: 1px solid rgba(255,255,255,.05); margin-top: 8px; }
+.back-link:hover { color: var(--teal); }
+
+.main { flex: 1; display: flex; min-width: 0; }
+
+/* TICKET LIST */
+.ticket-list { width: 260px; border-right: 1px solid var(--border); background: var(--white); flex-shrink: 0; display: flex; flex-direction: column; }
+.ticket-header { padding: 16px; border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 600; }
+.ticket-items { flex: 1; overflow-y: auto; }
+.ticket-item { padding: 14px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .15s; }
+.ticket-item:hover { background: var(--mist); }
+.ticket-item.active { background: var(--teal-light); border-left: 3px solid var(--teal); }
+.ticket-subject { font-size: 13px; font-weight: 600; color: var(--ink); }
+.ticket-preview { font-size: 11px; color: var(--ink-faint); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ticket-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+.ticket-time { font-size: 10px; color: var(--ink-faint); }
+.ticket-new { padding: 12px 16px; }
+
+/* CHAT */
+.chat-area { flex: 1; display: flex; flex-direction: column; background: var(--mist); min-width: 0; }
+.chat-header { background: var(--white); padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.chat-header .ch-name { font-size: 14px; font-weight: 600; }
+.chat-header .ch-sub { font-size: 11px; color: var(--ink-mid); }
+.chat-messages { flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; }
+.chat-msg { max-width: 70%; padding: 12px 16px; border-radius: 14px; font-size: 13px; line-height: 1.55; }
+.chat-msg.agent { background: var(--white); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
+.chat-msg.user { background: var(--navy); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; }
+.chat-msg .time { font-size: 10px; color: var(--ink-faint); margin-top: 4px; }
+.chat-msg.user .time { color: rgba(255,255,255,.5); }
+.chat-input-row { background: var(--white); border-top: 1px solid var(--border); padding: 14px 20px; display: flex; gap: 10px; }
+.chat-input {
+  flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: var(--r-sm);
+  font-family: var(--sans); font-size: 13px; background: var(--mist); transition: border-color .15s;
+}
+.chat-input:focus { outline: none; border-color: var(--teal); }
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .ticket-list { width: 200px; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">Nova Wealth</div>
+    <nav>
+      <a href="dashboard.html"><span class="ico">◼</span> Dashboard</a>
+      <a href="portfolio.html"><span class="ico">◈</span> Portfolio</a>
+      <a href="goals.html"><span class="ico">◎</span> Goals</a>
+      <a href="funding.html"><span class="ico">↕</span> Transactions</a>
+      <a href="funding.html"><span class="ico">💳</span> Funding</a>
+      <a href="analytics.html"><span class="ico">📊</span> Analytics</a>
+      <a href="statements.html"><span class="ico">📄</span> Statements</a>
+      <a href="notifications.html"><span class="ico">🔔</span> Notifications</a>
+      <a href="support.html" class="active"><span class="ico">💬</span> Support</a>
+      <a href="#"><span class="ico">⚙</span> Settings</a>
+    </nav>
+    <a href="../index.html" class="back-link">← Overview</a>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="sidebar-avatar">AO</div>
+        <div class="sidebar-user-info">
+          <div class="name">Amara Osei</div>
+          <div class="role">Premium Investor</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="ticket-list">
+      <div class="ticket-header">Support</div>
+      <div class="ticket-items">
+        <div class="ticket-item active" onclick="selectTicket(this, 0)">
+          <div class="ticket-subject">Withdrawal delay</div>
+          <div class="ticket-preview">My $2,000 withdrawal hasn't…</div>
+          <div class="ticket-meta"><span class="badge badge-amber" style="font-size:9px">In progress</span><span class="ticket-time">2h ago</span></div>
+        </div>
+        <div class="ticket-item" onclick="selectTicket(this, 1)">
+          <div class="ticket-subject">Link bank account</div>
+          <div class="ticket-preview">How do I add a second bank…</div>
+          <div class="ticket-meta"><span class="badge badge-teal" style="font-size:9px">Resolved</span><span class="ticket-time">Jun 8</span></div>
+        </div>
+        <div class="ticket-item" onclick="selectTicket(this, 2)">
+          <div class="ticket-subject">KYC document rejection</div>
+          <div class="ticket-preview">My passport was rejected…</div>
+          <div class="ticket-meta"><span class="badge badge-teal" style="font-size:9px">Resolved</span><span class="ticket-time">Jun 2</span></div>
+        </div>
+      </div>
+      <div class="ticket-new">
+        <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center" onclick="newTicket()">+ New ticket</button>
+      </div>
+    </div>
+
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="ch-name" id="chat-title">Withdrawal delay — #TKT-20841</div>
+        <div class="ch-sub">Agent: Fatima Aliyu · <span style="color:var(--teal)">Online</span></div>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-msg agent">
+          Hi Amara, I can see your withdrawal request for $2,000 submitted on Jun 9. It's currently in our compliance review queue — this can take up to 2 business days. I'll flag it for priority review.
+          <div class="time">9:14 AM</div>
+        </div>
+        <div class="chat-msg user">
+          Thank you! Is there anything I can do to speed it up?
+          <div class="time">9:18 AM</div>
+        </div>
+        <div class="chat-msg agent">
+          No action needed from you — I've already escalated it. You should see the funds in your GTBank account by end of business tomorrow. I'll send you an email confirmation once it clears.
+          <div class="time">9:20 AM</div>
+        </div>
+      </div>
+      <div class="chat-input-row">
+        <input class="chat-input" placeholder="Type a message…" id="chat-input" onkeydown="if(event.key==='Enter')sendMessage()">
+        <button class="btn btn-primary btn-sm" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+const tickets = [
+  { title: 'Withdrawal delay — #TKT-20841', agent: 'Fatima Aliyu', msgs: [
+    { role: 'agent', text: 'Hi Amara, I can see your withdrawal request for $2,000 submitted on Jun 9. It\'s currently in our compliance review queue — this can take up to 2 business days. I\'ll flag it for priority review.', time: '9:14 AM' },
+    { role: 'user', text: 'Thank you! Is there anything I can do to speed it up?', time: '9:18 AM' },
+    { role: 'agent', text: 'No action needed from you — I\'ve already escalated it. You should see the funds in your GTBank account by end of business tomorrow.', time: '9:20 AM' }
+  ]},
+  { title: 'Link bank account — #TKT-20839', agent: 'Fatima Aliyu', msgs: [
+    { role: 'user', text: 'How do I add a second bank account to my profile?', time: 'Jun 8, 2:15 PM' },
+    { role: 'agent', text: 'Go to Settings → Linked Accounts → Add Account. You can link up to 3 bank accounts for deposits and withdrawals.', time: 'Jun 8, 2:22 PM' },
+    { role: 'user', text: 'Perfect, got it working. Thanks!', time: 'Jun 8, 2:30 PM' },
+    { role: 'agent', text: 'Great! Let me know if you need anything else.', time: 'Jun 8, 2:31 PM' }
+  ]},
+  { title: 'KYC document rejection — #TKT-20812', agent: 'Ahmed Bello', msgs: [
+    { role: 'user', text: 'My passport was rejected saying "image too blurry". What should I do?', time: 'Jun 2, 10:05 AM' },
+    { role: 'agent', text: 'Please retake the photo in good lighting, making sure all four corners of the document are visible and the text is readable. Then re-upload from the KYC section.', time: 'Jun 2, 10:12 AM' },
+    { role: 'user', text: 'Done, re-uploaded. Can you check?', time: 'Jun 2, 11:30 AM' },
+    { role: 'agent', text: 'Verified! Your identity is now confirmed. Welcome aboard.', time: 'Jun 2, 11:45 AM' }
+  ]}
+];
+
+let currentTicket = 0;
+
+function selectTicket(el, idx) {
+  document.querySelectorAll('.ticket-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentTicket = idx;
+  renderChat();
+}
+
+function renderChat() {
+  const t = tickets[currentTicket];
+  document.getElementById('chat-title').textContent = t.title;
+  const container = document.getElementById('chat-messages');
+  container.innerHTML = t.msgs.map(m => 
+    '<div class="chat-msg ' + m.role + '">' + m.text + '<div class="time">' + m.time + '</div></div>'
+  ).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  tickets[currentTicket].msgs.push({ role: 'user', text, time: 'Now' });
+  input.value = '';
+  renderChat();
+  // Auto-reply
+  setTimeout(() => {
+    tickets[currentTicket].msgs.push({ role: 'agent', text: 'Thanks for your message. A team member will get back to you shortly.', time: 'Now' });
+    renderChat();
+  }, 1500);
+}
+
+function newTicket() {
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;top:20px;right:20px;background:var(--teal);color:#fff;padding:14px 24px;border-radius:12px;font-size:13px;font-weight:600;z-index:300;box-shadow:0 8px 24px rgba(10,182,139,.3);';
+  toast.textContent = '✓ New support ticket created';
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+</script>
+</body>
+</html>

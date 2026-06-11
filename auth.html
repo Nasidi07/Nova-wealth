@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Wealth — Smart Investing, Automated</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal: #0AB68B;
+  --teal-dark: #078C6C;
+  --teal-light: #E6F7F2;
+  --navy: #0B1F3A;
+  --navy-mid: #1A3354;
+  --slate: #4A6080;
+  --mist: #F0F4F8;
+  --white: #FFFFFF;
+  --border: #DDE4ED;
+  --amber: #F59E0B;
+  --ink: #0B1F3A;
+  --ink-mid: #4A6080;
+  --ink-faint: #94A3B8;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Sora', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --r-sm: 6px;
+  --r: 12px;
+  --r-lg: 20px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--sans); color: var(--ink); background: var(--white); }
+a { text-decoration: none; color: inherit; }
+button { cursor: pointer; font-family: var(--sans); }
+.btn { display: inline-flex; align-items: center; gap: 6px; border: none; font-weight: 600; border-radius: var(--r-sm); transition: opacity .15s; }
+.btn:hover { opacity: .88; }
+.btn-primary { background: var(--teal); color: #fff; padding: 12px 24px; font-size: 14px; }
+.btn-ghost { background: transparent; color: var(--ink-mid); border: 1.5px solid var(--border); padding: 11px 20px; font-size: 14px; }
+.btn-lg { padding: 16px 36px; font-size: 16px; }
+.btn-navy { background: var(--navy); color: #fff; padding: 12px 24px; font-size: 14px; }
+
+/* NAV */
+.nav {
+  background: var(--white);
+  padding: 16px 48px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav .brand { font-family: var(--serif); font-size: 24px; color: var(--navy); }
+.nav .brand span { color: var(--teal); }
+.nav .links { display: flex; gap: 28px; font-size: 14px; color: var(--ink-mid); font-weight: 500; }
+.nav .links a:hover { color: var(--ink); }
+.nav .ctas { margin-left: auto; display: flex; gap: 10px; }
+.nav .back-link { font-size: 12px; color: var(--ink-faint); font-family: var(--mono); margin-left: auto; margin-right: 0; }
+.nav .back-link:hover { color: var(--teal); }
+
+/* HERO */
+.hero {
+  background: var(--navy);
+  padding: 72px 48px 64px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(10,182,139,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero .eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: 56px;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  max-width: 560px;
+}
+.hero h1 em { color: var(--teal); font-style: italic; }
+.hero p { font-size: 16px; color: #7A95B0; max-width: 480px; margin-bottom: 32px; line-height: 1.7; }
+.hero .cta-row { display: flex; gap: 12px; align-items: center; }
+.hero .cta-row .btn-ghost { border-color: rgba(255,255,255,.2); color: #fff; }
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.hero-stat .val { font-family: var(--serif); font-size: 32px; color: #fff; }
+.hero-stat .lbl { font-size: 12px; color: #4A6080; margin-top: 4px; }
+
+/* FEATURES */
+.features { padding: 64px 48px; }
+.features h2 { font-family: var(--serif); font-size: 36px; margin-bottom: 8px; }
+.features .sub { font-size: 14px; color: var(--ink-mid); margin-bottom: 40px; }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.feature-cell {
+  padding: 28px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transition: background .2s;
+}
+.feature-cell:nth-child(3n) { border-right: none; }
+.feature-cell:nth-last-child(-n+3) { border-bottom: none; }
+.feature-cell:hover { background: var(--mist); }
+.feature-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--teal-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+.feature-cell h3 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.feature-cell p { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+/* STATS */
+.stats-section {
+  background: var(--mist);
+  padding: 56px 48px;
+  display: flex;
+  gap: 48px;
+  justify-content: center;
+}
+.stat-card { text-align: center; }
+.stat-card .val { font-family: var(--serif); font-size: 40px; color: var(--navy); }
+.stat-card .lbl { font-size: 13px; color: var(--ink-mid); margin-top: 4px; }
+
+/* HOW IT WORKS */
+.how { padding: 64px 48px; }
+.how h2 { font-family: var(--serif); font-size: 36px; margin-bottom: 40px; text-align: center; }
+.steps { display: flex; gap: 40px; max-width: 960px; margin: 0 auto; }
+.step { flex: 1; text-align: center; }
+.step-num {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--teal-light);
+  color: var(--teal-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 auto 16px;
+}
+.step h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+.step p { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+/* CTA */
+.cta-section {
+  background: var(--navy);
+  padding: 64px 48px;
+  text-align: center;
+}
+.cta-section h2 { font-family: var(--serif); font-size: 36px; color: #fff; margin-bottom: 12px; }
+.cta-section p { font-size: 14px; color: #7A95B0; margin-bottom: 28px; }
+
+/* FOOTER */
+.footer {
+  background: #060F1C;
+  padding: 32px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #4A6080;
+}
+.footer .brand { font-family: var(--serif); font-size: 16px; color: var(--teal); }
+
+@media (max-width: 768px) {
+  .nav { padding: 14px 24px; gap: 16px; }
+  .nav .links { display: none; }
+  .hero { padding: 48px 24px; }
+  .hero h1 { font-size: 36px; }
+  .features { padding: 40px 24px; }
+  .features-grid { grid-template-columns: 1fr; }
+  .feature-cell { border-right: none; }
+  .stats-section { flex-direction: column; align-items: center; padding: 40px 24px; }
+  .steps { flex-direction: column; }
+  .footer { flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand">Nova <span>Wealth</span></div>
+  <div class="links">
+    <a href="#features">How it works</a>
+    <a href="#features">Investing</a>
+    <a href="#goals">Goals</a>
+    <a href="#pricing">Pricing</a>
+  </div>
+  <div class="ctas">
+    <a href="auth.html" class="btn btn-ghost" style="font-size:13px;padding:10px 18px">Sign in</a>
+    <a href="auth.html" class="btn btn-primary" style="font-size:13px;padding:10px 18px">Get started</a>
+  </div>
+  <a href="../index.html" class="back-link">← Overview</a>
+</nav>
+
+<section class="hero">
+  <div class="eyebrow">Smart investing, automated</div>
+  <h1>Your money, working <em>harder</em> than you do.</h1>
+  <p>Nova Wealth builds and manages a personalised portfolio based on your goals, timeline, and risk tolerance — then rebalances automatically so you don't have to.</p>
+  <div class="cta-row">
+    <a href="auth.html" class="btn btn-primary btn-lg">Start investing free</a>
+    <a href="#how" class="btn btn-ghost btn-lg">See how it works →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="val">$6.2B</div><div class="lbl">Assets under management</div></div>
+    <div class="hero-stat"><div class="val">98K+</div><div class="lbl">Active investors</div></div>
+    <div class="hero-stat"><div class="val">11.4%</div><div class="lbl">Avg. annual return (2025)</div></div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <h2>Everything you need to grow wealth</h2>
+  <div class="sub">Automated investing, tax optimisation, and goal tracking — all in one place.</div>
+  <div class="features-grid">
+    <div class="feature-cell">
+      <div class="feature-icon">📊</div>
+      <h3>Auto-rebalancing</h3>
+      <p>Your portfolio stays on target as markets shift, without lifting a finger.</p>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-icon">💸</div>
+      <h3>Tax-loss harvesting</h3>
+      <p>We capture losses to offset gains — typically saving clients thousands per year.</p>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-icon">🎯</div>
+      <h3>Goal-based investing</h3>
+      <p>Set a target. We'll tell you exactly how to get there.</p>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-icon">🏦</div>
+      <h3>High-yield cash account</h3>
+      <p>Earn 4.8% APY on uninvested cash. No minimums, no fees.</p>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-icon">🔒</div>
+      <h3>Bank-grade security</h3>
+      <p>256-bit encryption, MFA, and SOC 2 Type II certification.</p>
+    </div>
+    <div class="feature-cell">
+      <div class="feature-icon">🤖</div>
+      <h3>AI financial advisor</h3>
+      <p>Get personalised guidance based on your complete financial picture.</p>
+    </div>
+  </div>
+</section>
+
+<section class="stats-section">
+  <div class="stat-card"><div class="val">$6.2B</div><div class="lbl">Assets under management</div></div>
+  <div class="stat-card"><div class="val">98,241</div><div class="lbl">Active investors</div></div>
+  <div class="stat-card"><div class="val">11.4%</div><div class="lbl">Avg. annual return (2025)</div></div>
+  <div class="stat-card"><div class="val">0.25%</div><div class="lbl">Annual advisory fee</div></div>
+</section>
+
+<section class="how" id="how">
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Tell us about you</h3>
+      <p>Answer a few questions about your goals, timeline, and risk tolerance. Takes 3 minutes.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>We build your portfolio</h3>
+      <p>Our algorithms construct a diversified, tax-efficient portfolio tailored to your profile.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Sit back and grow</h3>
+      <p>We自动 rebalance, harvest taxes, and optimise continuously. You check in when you want.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="pricing">
+  <h2>Start building wealth today</h2>
+  <p>No account minimums. Cancel anytime. Your first $10,000 managed free for 6 months.</p>
+  <a href="auth.html" class="btn btn-primary btn-lg">Get started — it's free</a>
+</section>
+
+<footer class="footer">
+  <div class="brand">Nova Wealth</div>
+  <div>© 2026 Nova Wealth Inc. All rights reserved. SIPC insured.</div>
+  <div style="display:flex;gap:20px">
+    <a href="#" style="color:#7A95B0">Privacy</a>
+    <a href="#" style="color:#7A95B0">Terms</a>
+    <a href="#" style="color:#7A95B0">Disclosures</a>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+  });
+});
+</script>
+</body>
+</html>
